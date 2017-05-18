@@ -254,7 +254,7 @@ namespace EventStore.ClientAPI.Internal
         public Task<EventStoreSubscription> SubscribeToStreamAsync(
                 string stream,
                 bool resolveLinkTos,
-                Action<EventStoreSubscription, ResolvedEvent> eventAppeared,
+                Func<EventStoreSubscription, ResolvedEvent, Task> eventAppeared,
                 Action<EventStoreSubscription, SubscriptionDropReason, Exception> subscriptionDropped = null,
                 UserCredentials userCredentials = null)
         {
@@ -271,7 +271,7 @@ namespace EventStore.ClientAPI.Internal
         public EventStoreStreamCatchUpSubscription SubscribeToStreamFrom(string stream,
                                                                          long? lastCheckpoint,
                                                                          bool resolveLinkTos,
-                                                                         Action<EventStoreCatchUpSubscription, ResolvedEvent> eventAppeared,
+                                                                         Func<EventStoreCatchUpSubscription, ResolvedEvent, Task> eventAppeared,
                                                                          Action<EventStoreCatchUpSubscription> liveProcessingStarted = null,
                                                                          Action<EventStoreCatchUpSubscription, SubscriptionDropReason, Exception> subscriptionDropped = null,
                                                                          UserCredentials userCredentials = null,
@@ -289,7 +289,7 @@ namespace EventStore.ClientAPI.Internal
                 string stream,
                 long? lastCheckpoint,
                 CatchUpSubscriptionSettings settings,
-                Action<EventStoreCatchUpSubscription, ResolvedEvent> eventAppeared,
+                Func<EventStoreCatchUpSubscription, ResolvedEvent, Task> eventAppeared,
                 Action<EventStoreCatchUpSubscription> liveProcessingStarted = null,
                 Action<EventStoreCatchUpSubscription, SubscriptionDropReason, Exception> subscriptionDropped = null,
                 UserCredentials userCredentials = null)
@@ -307,7 +307,7 @@ namespace EventStore.ClientAPI.Internal
 
         public Task<EventStoreSubscription> SubscribeToAllAsync(
                 bool resolveLinkTos,
-                Action<EventStoreSubscription, ResolvedEvent> eventAppeared,
+                Func<EventStoreSubscription, ResolvedEvent, Task> eventAppeared,
                 Action<EventStoreSubscription, SubscriptionDropReason, Exception> subscriptionDropped = null,
                 UserCredentials userCredentials = null)
         {
@@ -323,7 +323,7 @@ namespace EventStore.ClientAPI.Internal
         public EventStoreAllCatchUpSubscription SubscribeToAllFrom(
             Position? lastCheckpoint,
             bool resolveLinkTos,
-            Action<EventStoreCatchUpSubscription, ResolvedEvent> eventAppeared,
+            Func<EventStoreCatchUpSubscription, ResolvedEvent, Task> eventAppeared,
             Action<EventStoreCatchUpSubscription> liveProcessingStarted = null,
             Action<EventStoreCatchUpSubscription, SubscriptionDropReason, Exception> subscriptionDropped = null,
             UserCredentials userCredentials = null,
@@ -338,7 +338,7 @@ namespace EventStore.ClientAPI.Internal
         public EventStoreAllCatchUpSubscription SubscribeToAllFrom(
             Position? lastCheckpoint,
             CatchUpSubscriptionSettings settings,
-            Action<EventStoreCatchUpSubscription, ResolvedEvent> eventAppeared,
+            Func<EventStoreCatchUpSubscription, ResolvedEvent, Task> eventAppeared,
             Action<EventStoreCatchUpSubscription> liveProcessingStarted = null,
             Action<EventStoreCatchUpSubscription, SubscriptionDropReason, Exception> subscriptionDropped = null,
             UserCredentials userCredentials = null)
@@ -356,7 +356,7 @@ namespace EventStore.ClientAPI.Internal
         public EventStorePersistentSubscriptionBase ConnectToPersistentSubscription(
             string stream,
             string groupName,
-            Action<EventStorePersistentSubscriptionBase, ResolvedEvent> eventAppeared,
+            Func<EventStorePersistentSubscriptionBase, ResolvedEvent, Task> eventAppeared,
             Action<EventStorePersistentSubscriptionBase, SubscriptionDropReason, Exception> subscriptionDropped = null,
             UserCredentials userCredentials = null,
             int bufferSize = 10,
@@ -377,7 +377,7 @@ namespace EventStore.ClientAPI.Internal
         public Task<EventStorePersistentSubscriptionBase> ConnectToPersistentSubscriptionAsync(
             string stream,
             string groupName,
-            Action<EventStorePersistentSubscriptionBase, ResolvedEvent> eventAppeared,
+            Func<EventStorePersistentSubscriptionBase, ResolvedEvent, Task> eventAppeared,
             Action<EventStorePersistentSubscriptionBase, SubscriptionDropReason, Exception> subscriptionDropped = null,
             UserCredentials userCredentials = null,
             int bufferSize = 10,
@@ -414,22 +414,22 @@ namespace EventStore.ClientAPI.Internal
         */
 
 
-        public Task CreatePersistentSubscriptionAsync(string stream, string groupName, PersistentSubscriptionSettings settings, UserCredentials userCredentials = null) {
+        public Task CreatePersistentSubscriptionAsync(string stream, string groupName, PersistentSubscriptionSettings settings, UserCredentials credentials = null) {
             Ensure.NotNullOrEmpty(stream, "stream");
             Ensure.NotNullOrEmpty(groupName, "groupName");
             Ensure.NotNull(settings, "settings");
             var source = new TaskCompletionSource<PersistentSubscriptionCreateResult>();
-            EnqueueOperation(new CreatePersistentSubscriptionOperation(_settings.Log, source, stream, groupName, settings, userCredentials));
+            EnqueueOperation(new CreatePersistentSubscriptionOperation(_settings.Log, source, stream, groupName, settings, credentials));
             return source.Task;
         }
 
-        public Task UpdatePersistentSubscriptionAsync(string stream, string groupName, PersistentSubscriptionSettings settings, UserCredentials userCredentials = null)
+        public Task UpdatePersistentSubscriptionAsync(string stream, string groupName, PersistentSubscriptionSettings settings, UserCredentials credentials = null)
         {
             Ensure.NotNullOrEmpty(stream, "stream");
             Ensure.NotNullOrEmpty(groupName, "groupName");
             Ensure.NotNull(settings, "settings");
             var source = new TaskCompletionSource<PersistentSubscriptionUpdateResult>();
-            EnqueueOperation(new UpdatePersistentSubscriptionOperation(_settings.Log, source, stream, groupName, settings, userCredentials));
+            EnqueueOperation(new UpdatePersistentSubscriptionOperation(_settings.Log, source, stream, groupName, settings, credentials));
             return source.Task;
         }
 /*

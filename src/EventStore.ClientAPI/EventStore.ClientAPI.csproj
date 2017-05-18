@@ -68,6 +68,7 @@
     <Compile Include="ConditionalWriteFailureReason.cs" />
     <Compile Include="ConditionalWriteResult.cs" />
     <Compile Include="ConnectionString.cs" />
+    <Compile Include="Delegates.cs" />
     <Compile Include="EventStorePersistentSubscription.cs" />
     <Compile Include="EventStorePersistentSubscriptionBase.cs" />
     <Compile Include="Exceptions\UserCommandConflictException.cs" />

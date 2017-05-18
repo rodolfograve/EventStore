@@ -17,7 +17,7 @@ namespace EventStore.ClientAPI.ClientOperations
         protected readonly string _streamId;
         protected readonly bool _resolveLinkTos;
         protected readonly UserCredentials _userCredentials;
-        protected readonly Action<T, ResolvedEvent> _eventAppeared;
+        protected readonly Func<T, ResolvedEvent, Task> _eventAppeared;
         private readonly Action<T, SubscriptionDropReason, Exception> _subscriptionDropped;
         private readonly bool _verboseLogging;
         protected readonly Func<TcpPackageConnection> _getConnection;
@@ -33,7 +33,7 @@ namespace EventStore.ClientAPI.ClientOperations
                                      string streamId,
                                      bool resolveLinkTos,
                                      UserCredentials userCredentials,
-                                     Action<T, ResolvedEvent> eventAppeared,
+                                     Func<T, ResolvedEvent, Task> eventAppeared,
                                      Action<T, SubscriptionDropReason, Exception> subscriptionDropped,
                                      bool verboseLogging,
                                      Func<TcpPackageConnection> getConnection)

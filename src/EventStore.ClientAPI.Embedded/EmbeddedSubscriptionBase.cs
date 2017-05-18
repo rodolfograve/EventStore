@@ -17,7 +17,7 @@ namespace EventStore.ClientAPI.Embedded
         private readonly ILogger _log;
         protected readonly Guid ConnectionId;
         private readonly TaskCompletionSource<TSubscription> _source;
-        private readonly Action<EventStoreSubscription, ResolvedEvent> _eventAppeared;
+        private readonly Func<EventStoreSubscription, ResolvedEvent, Task> _eventAppeared;
         private readonly Action<EventStoreSubscription, SubscriptionDropReason, Exception> _subscriptionDropped;
         private int _actionExecuting;
         private readonly ConcurrentQueue<Action> _actionQueue;
@@ -29,7 +29,7 @@ namespace EventStore.ClientAPI.Embedded
 
         protected EmbeddedSubscriptionBase(
             ILogger log, IPublisher publisher, Guid connectionId, TaskCompletionSource<TSubscription> source,
-            string streamId, Action<EventStoreSubscription, ResolvedEvent> eventAppeared,
+            string streamId, Func<EventStoreSubscription, ResolvedEvent, Task> eventAppeared,
             Action<EventStoreSubscription, SubscriptionDropReason, Exception> subscriptionDropped)
         {
             Ensure.NotNull(source, "source");

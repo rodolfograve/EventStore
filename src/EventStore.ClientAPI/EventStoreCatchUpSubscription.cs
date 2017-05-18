@@ -52,7 +52,7 @@ namespace EventStore.ClientAPI
         /// <summary>
         /// Action invoked when a new event appears on the subscription.
         /// </summary>
-        protected readonly Action<EventStoreCatchUpSubscription, ResolvedEvent> EventAppeared;
+        protected readonly Func<EventStoreCatchUpSubscription, ResolvedEvent, Task> EventAppeared;
         private readonly Action<EventStoreCatchUpSubscription> _liveProcessingStarted;
         private readonly Action<EventStoreCatchUpSubscription, SubscriptionDropReason, Exception> _subscriptionDropped;
         /// <summary>
@@ -108,7 +108,7 @@ namespace EventStore.ClientAPI
                                                 ILogger log,
                                                 string streamId,
                                                 UserCredentials userCredentials,
-                                                Action<EventStoreCatchUpSubscription, ResolvedEvent> eventAppeared,
+                                                Func<EventStoreCatchUpSubscription, ResolvedEvent, Task> eventAppeared,
                                                 Action<EventStoreCatchUpSubscription> liveProcessingStarted,
                                                 Action<EventStoreCatchUpSubscription, SubscriptionDropReason, Exception> subscriptionDropped,
                                                 CatchUpSubscriptionSettings settings)
@@ -272,7 +272,7 @@ namespace EventStore.ClientAPI
             }
         }
 
-        private void EnqueuePushedEvent(EventStoreSubscription subscription, ResolvedEvent e)
+        private Task EnqueuePushedEvent(EventStoreSubscription subscription, ResolvedEvent e)
         {
             if (Verbose)
                 Log.Debug("Catch-up Subscription {0} to {1}: event appeared ({2}, {3}, {4} @ {5}).",
@@ -284,13 +284,14 @@ namespace EventStore.ClientAPI
             {
                 EnqueueSubscriptionDropNotification(SubscriptionDropReason.ProcessingQueueOverflow, null);
                 subscription.Unsubscribe();
-                return;
+                return Task.CompletedTask;
             }
 
             _liveQueue.Enqueue(e);
 
             if (_allowProcessing)
                 EnsureProcessingPushQueue();
+            return Task.CompletedTask;
         }
 
         private void ServerSubscriptionDropped(EventStoreSubscription subscription, SubscriptionDropReason reason, Exception exc)
@@ -407,7 +408,7 @@ namespace EventStore.ClientAPI
                                                   ILogger log,
                                                   Position? fromPositionExclusive, /* if null -- from the very beginning */
                                                   UserCredentials userCredentials,
-                                                  Action<EventStoreCatchUpSubscription, ResolvedEvent> eventAppeared,
+                                                  Func<EventStoreCatchUpSubscription, ResolvedEvent, Task> eventAppeared,
                                                   Action<EventStoreCatchUpSubscription> liveProcessingStarted,
                                                   Action<EventStoreCatchUpSubscription, SubscriptionDropReason, Exception> subscriptionDropped,
                                                  CatchUpSubscriptionSettings settings)
@@ -544,7 +545,7 @@ namespace EventStore.ClientAPI
                                                      string streamId,
                                                      long? fromEventNumberExclusive, /* if null -- from the very beginning */
                                                      UserCredentials userCredentials,
-                                                     Action<EventStoreCatchUpSubscription, ResolvedEvent> eventAppeared,
+                                                     Func<EventStoreCatchUpSubscription, ResolvedEvent, Task> eventAppeared,
                                                      Action<EventStoreCatchUpSubscription> liveProcessingStarted,
                                                      Action<EventStoreCatchUpSubscription, SubscriptionDropReason, Exception> subscriptionDropped,
                                                      CatchUpSubscriptionSettings settings)
