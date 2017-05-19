@@ -57,11 +57,11 @@ namespace EventStore.ClientAPI.Embedded
             StreamEventAppeared(message.CorrelationId, message.Event);
         }
 
-        private void StreamEventAppeared(Guid correlationId, EventStore.Core.Data.ResolvedEvent resolvedEvent)
+        private async Task StreamEventAppeared(Guid correlationId, EventStore.Core.Data.ResolvedEvent resolvedEvent)
         {
             IEmbeddedSubscription subscription;
             _subscriptions.TryGetActiveSubscription(correlationId, out subscription);
-            subscription.EventAppeared(resolvedEvent);
+            await subscription.EventAppeared(resolvedEvent);
         }
 
         private void ConfirmSubscription(Guid correlationId, long lastCommitPosition, long? lastEventNumber)
