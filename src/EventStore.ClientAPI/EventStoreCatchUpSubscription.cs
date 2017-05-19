@@ -19,7 +19,7 @@ namespace EventStore.ClientAPI
         /// Indicates whether the subscription is to all events or to
         /// a specific stream.
         /// </summary>
-        public bool IsSubscribedToAll { get { return StreamId == string.Empty; } }
+        public bool IsSubscribedToAll => StreamId == string.Empty;
         /// <summary>
         /// The name of the stream to which the subscription is subscribed
         /// (empty if subscribed to all).
@@ -129,10 +129,10 @@ namespace EventStore.ClientAPI
             SubscriptionName = settings.SubscriptionName ?? String.Empty;
         }
 
-        internal Task Start()
+        internal Task StartAsync()
         {
             if (Verbose) Log.Debug("Catch-up Subscription {0} to {1}: starting...", SubscriptionName, IsSubscribedToAll ? "<all>" : StreamId);
-            return RunSubscription();
+            return RunSubscriptionAsync();
         }
 
         /// <summary>
@@ -166,16 +166,12 @@ namespace EventStore.ClientAPI
             if (Verbose) Log.Debug("Catch-up Subscription {0} to {1}: recovering after reconnection.", SubscriptionName, IsSubscribedToAll ? "<all>" : StreamId);
             if (Verbose) Log.Debug("Catch-up Subscription {0} to {1}: unhooking from connection.Connected.", SubscriptionName, IsSubscribedToAll ? "<all>" : StreamId);
             _connection.Connected -= OnReconnect;
-            RunSubscription();
+            RunSubscriptionAsync();
         }
 
-        private Task RunSubscription()
-        {
-            return Task.Factory.StartNew(LoadHistoricalEvents, TaskCreationOptions.AttachedToParent)
-                .ContinueWith(_ => HandleErrorOrContinue(_));
-        }
+        private Task RunSubscriptionAsync() => LoadHistoricalEventsAsync();
 
-        private void LoadHistoricalEvents()
+        private async Task LoadHistoricalEventsAsync()
         {
             if (Verbose) Log.Debug("Catch-up Subscription {0} to {1}: running...", SubscriptionName, IsSubscribedToAll ? "<all>" : StreamId);
 
@@ -186,8 +182,8 @@ namespace EventStore.ClientAPI
             {
                 if (Verbose) Log.Debug("Catch-up Subscription {0} to {1}: pulling events...", SubscriptionName, IsSubscribedToAll ? "<all>" : StreamId);
 
-                ReadEventsTillAsync(_connection, _resolveLinkTos, _userCredentials, null, null)
-                    .ContinueWith(_ => HandleErrorOrContinue(_, SubscribeToStream), TaskContinuationOptions.AttachedToParent);
+                await ReadEventsTillAsync(_connection, _resolveLinkTos, _userCredentials, null, null).ConfigureAwait(false);
+                await SubscribeToStreamAsync().ConfigureAwait(false);
             }
             else
             {
@@ -195,21 +191,19 @@ namespace EventStore.ClientAPI
             }
         }
 
-        private void SubscribeToStream()
+        private async Task SubscribeToStreamAsync()
         {
             if (!ShouldStop)
             {
                 if (Verbose) Log.Debug("Catch-up Subscription {0} to {1}: subscribing...", SubscriptionName, IsSubscribedToAll ? "<all>" : StreamId);
 
-                var subscribeTask = StreamId == string.Empty
-                    ? _connection.SubscribeToAllAsync(_resolveLinkTos, EnqueuePushedEvent, ServerSubscriptionDropped, _userCredentials)
-                    : _connection.SubscribeToStreamAsync(StreamId, _resolveLinkTos, EnqueuePushedEvent, ServerSubscriptionDropped, _userCredentials);
+                var subscription =
+                    StreamId == string.Empty
+                    ? await _connection.SubscribeToAllAsync(_resolveLinkTos, EnqueuePushedEvent, ServerSubscriptionDropped, _userCredentials).ConfigureAwait(false)
+                    : await _connection.SubscribeToStreamAsync(StreamId, _resolveLinkTos, EnqueuePushedEvent, ServerSubscriptionDropped, _userCredentials).ConfigureAwait(false);
 
-                subscribeTask.ContinueWith(_ => HandleErrorOrContinue(_, () =>
-                                                                            {
-                                                                                _subscription = _.Result;
-                                                                                ReadMissedHistoricEvents();
-                                                                            }), TaskContinuationOptions.AttachedToParent);
+                _subscription = subscription;
+                await ReadMissedHistoricEventsAsync().ConfigureAwait(false);
             }
             else
             {
@@ -217,14 +211,14 @@ namespace EventStore.ClientAPI
             }
         }
 
-        private void ReadMissedHistoricEvents()
+        private async Task ReadMissedHistoricEventsAsync()
         {
             if (!ShouldStop)
             {
                 if (Verbose) Log.Debug("Catch-up Subscription {0} to {1}: pulling events (if left)...", SubscriptionName, IsSubscribedToAll ? "<all>" : StreamId);
 
-                ReadEventsTillAsync(_connection, _resolveLinkTos, _userCredentials, _subscription.LastCommitPosition, _subscription.LastEventNumber)
-                    .ContinueWith(_ => HandleErrorOrContinue(_, StartLiveProcessing), TaskContinuationOptions.AttachedToParent);
+                await ReadEventsTillAsync(_connection, _resolveLinkTos, _userCredentials, _subscription.LastCommitPosition, _subscription.LastEventNumber).ConfigureAwait(false);
+                StartLiveProcessing();
             }
             else
             {
@@ -250,24 +244,6 @@ namespace EventStore.ClientAPI
 
             _allowProcessing = true;
             EnsureProcessingPushQueue();
-        }
-
-        private void HandleErrorOrContinue(Task task, Action continuation = null)
-        {
-            if (task.IsFaulted)
-            {
-                DropSubscription(SubscriptionDropReason.CatchUpError, task.Exception.GetBaseException());
-                task.Wait();
-            }
-            else if (task.IsCanceled)
-            {
-                DropSubscription(SubscriptionDropReason.CatchUpError, new TaskCanceledException(task));
-                task.Wait();
-            }
-            else if (continuation != null)
-            {
-                continuation();
-            }
         }
 
         private Task EnqueuePushedEvent(EventStoreSubscription subscription, ResolvedEvent e)
@@ -314,10 +290,10 @@ namespace EventStore.ClientAPI
         private void EnsureProcessingPushQueue()
         {
             if (Interlocked.CompareExchange(ref _isProcessing, 1, 0) == 0)
-                ThreadPool.QueueUserWorkItem(_ => ProcessLiveQueue());
+                ThreadPool.QueueUserWorkItem(_ => ProcessLiveQueueAsync());
         }
 
-        private void ProcessLiveQueue()
+        private async void ProcessLiveQueueAsync()
         {
             do
             {
@@ -334,7 +310,7 @@ namespace EventStore.ClientAPI
 
                     try
                     {
-                        TryProcessAsync(e);
+                        await TryProcessAsync(e).ConfigureAwait(false);
                     }
                     catch (Exception exc)
                     {

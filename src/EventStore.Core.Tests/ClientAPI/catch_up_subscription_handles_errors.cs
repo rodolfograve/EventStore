@@ -85,7 +85,7 @@ namespace EventStore.Core.Tests.ClientAPI
 
         private void AssertStartFailsAndDropsSubscriptionWithException(ApplicationException expectedException)
         {
-            Assert.That(() => _subscription.Start().Wait(TimeoutMs), Throws.TypeOf<AggregateException>());
+            Assert.That(() => _subscription.StartAsync().Wait(TimeoutMs), Throws.TypeOf<AggregateException>());
             Assert.That(_isDropped);
             Assert.That(_dropReason, Is.EqualTo(SubscriptionDropReason.CatchUpError));
             Assert.That(_dropException, Is.SameAs(expectedException));
@@ -316,7 +316,7 @@ namespace EventStore.Core.Tests.ClientAPI
                 return taskCompletionSource.Task;
             });
 
-            var task = _subscription.Start();
+            var task = _subscription.StartAsync();
 
             Assert.That(task.Status, Is.Not.EqualTo(TaskStatus.RanToCompletion));
 
@@ -357,7 +357,7 @@ namespace EventStore.Core.Tests.ClientAPI
                 return taskCompletionSource.Task;
             });
 
-            Assert.That(_subscription.Start().Wait(TimeoutMs));
+            Assert.That(_subscription.StartAsync().Wait(TimeoutMs));
             Assert.That(_raisedEvents.Count, Is.EqualTo(0));
 
             Assert.That(innerSubscriptionDrop, Is.Not.Null);

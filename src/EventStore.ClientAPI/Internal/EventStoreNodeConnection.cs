@@ -291,7 +291,7 @@ namespace EventStore.ClientAPI.Internal
                     new EventStoreStreamCatchUpSubscription(this, Settings.Log, stream, lastCheckpoint,
                                                             userCredentials, eventAppeared, liveProcessingStarted,
                                                             subscriptionDropped, settings);
-            catchUpSubscription.Start();
+            catchUpSubscription.StartAsync();
             return catchUpSubscription;
         }
 
@@ -339,7 +339,7 @@ namespace EventStore.ClientAPI.Internal
                     new EventStoreAllCatchUpSubscription(this, Settings.Log, lastCheckpoint,
                                                          userCredentials, eventAppeared, liveProcessingStarted,
                                                          subscriptionDropped, settings);
-            catchUpSubscription.Start();
+            catchUpSubscription.StartAsync();
             return catchUpSubscription;
         }
 
