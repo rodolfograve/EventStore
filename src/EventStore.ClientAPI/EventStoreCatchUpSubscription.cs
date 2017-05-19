@@ -19,16 +19,16 @@ namespace EventStore.ClientAPI
         /// Indicates whether the subscription is to all events or to
         /// a specific stream.
         /// </summary>
-        public bool IsSubscribedToAll { get { return _streamId == string.Empty; } }
+        public bool IsSubscribedToAll { get { return StreamId == string.Empty; } }
         /// <summary>
         /// The name of the stream to which the subscription is subscribed
         /// (empty if subscribed to all).
         /// </summary>
-        public string StreamId { get { return _streamId; } }
+        public string StreamId { get; }
         /// <summary>
         /// The name of subscription.
         /// </summary>
-        public string SubscriptionName { get { return _subscriptionName; } }
+        public string SubscriptionName { get; }
 
         /// <summary>
         /// The <see cref="ILogger"/> to use for the subscription.
@@ -38,7 +38,6 @@ namespace EventStore.ClientAPI
         private readonly IEventStoreConnection _connection;
         private readonly bool _resolveLinkTos;
         private readonly UserCredentials _userCredentials;
-        private readonly string _streamId;
 
         /// <summary>
         /// The batch size to use during the read phase of the subscription.
@@ -59,7 +58,6 @@ namespace EventStore.ClientAPI
         /// Whether or not to use verbose logging (useful during debugging).
         /// </summary>
         protected readonly bool Verbose;
-        private readonly string _subscriptionName;
 
         private readonly ConcurrentQueue<ResolvedEvent> _liveQueue = new ConcurrentQueue<ResolvedEvent>();
         private EventStoreSubscription _subscription;
@@ -118,7 +116,7 @@ namespace EventStore.ClientAPI
             Ensure.NotNull(eventAppeared, "eventAppeared");
             _connection = connection;
             Log = log;
-            _streamId = string.IsNullOrEmpty(streamId) ? string.Empty : streamId;
+            StreamId = string.IsNullOrEmpty(streamId) ? string.Empty : streamId;
             _resolveLinkTos = settings.ResolveLinkTos;
             _userCredentials = userCredentials;
             ReadBatchSize = settings.ReadBatchSize;
@@ -128,7 +126,7 @@ namespace EventStore.ClientAPI
             _liveProcessingStarted = liveProcessingStarted;
             _subscriptionDropped = subscriptionDropped;
             Verbose = settings.VerboseLogging;
-            _subscriptionName = settings.SubscriptionName ?? String.Empty;
+            SubscriptionName = settings.SubscriptionName ?? String.Empty;
         }
 
         internal Task Start()
@@ -203,9 +201,9 @@ namespace EventStore.ClientAPI
             {
                 if (Verbose) Log.Debug("Catch-up Subscription {0} to {1}: subscribing...", SubscriptionName, IsSubscribedToAll ? "<all>" : StreamId);
 
-                var subscribeTask = _streamId == string.Empty
+                var subscribeTask = StreamId == string.Empty
                     ? _connection.SubscribeToAllAsync(_resolveLinkTos, EnqueuePushedEvent, ServerSubscriptionDropped, _userCredentials)
-                    : _connection.SubscribeToStreamAsync(_streamId, _resolveLinkTos, EnqueuePushedEvent, ServerSubscriptionDropped, _userCredentials);
+                    : _connection.SubscribeToStreamAsync(StreamId, _resolveLinkTos, EnqueuePushedEvent, ServerSubscriptionDropped, _userCredentials);
 
                 subscribeTask.ContinueWith(_ => HandleErrorOrContinue(_, () =>
                                                                             {
@@ -328,7 +326,7 @@ namespace EventStore.ClientAPI
                 {
                     if (e.Equals(DropSubscriptionEvent)) // drop subscription artificial ResolvedEvent
                     {
-                        if (_dropData == null) _dropData = new DropData(SubscriptionDropReason.Unknown, new Exception("Drop reason not specified."));
+                        _dropData = _dropData ?? new DropData(SubscriptionDropReason.Unknown, new Exception("Drop reason not specified."));
                         DropSubscription(_dropData.Reason, _dropData.Error);
                         Interlocked.CompareExchange(ref _isProcessing, 0, 1);
                         return;
@@ -359,10 +357,8 @@ namespace EventStore.ClientAPI
                               IsSubscribedToAll ? "<all>" : StreamId,
                               reason, error == null ? string.Empty : error.ToString());
 
-                if (_subscription != null)
-                    _subscription.Unsubscribe();
-                if (_subscriptionDropped != null)
-                    _subscriptionDropped(this, reason, error);
+                _subscription?.Unsubscribe();
+                _subscriptionDropped?.Invoke(this, reason, error);
                 _stopped.Set();
             }
         }
@@ -437,10 +433,10 @@ namespace EventStore.ClientAPI
                        UserCredentials userCredentials, long? lastCommitPosition, long? lastEventNumber)
         {
             var slice = await connection.ReadAllEventsForwardAsync(_nextReadPosition, ReadBatchSize, resolveLinkTos, userCredentials).ConfigureAwait(false);
-            await ReadEventsCallback(slice, connection, resolveLinkTos, userCredentials, lastCommitPosition, lastEventNumber);
+            await ReadEventsCallbackAsync(slice, connection, resolveLinkTos, userCredentials, lastCommitPosition, lastEventNumber).ConfigureAwait(false);
         }
 
-        private async Task ReadEventsCallback(AllEventsSlice slice, IEventStoreConnection connection, bool resolveLinkTos,
+        private async Task ReadEventsCallbackAsync(AllEventsSlice slice, IEventStoreConnection connection, bool resolveLinkTos,
                        UserCredentials userCredentials, long? lastCommitPosition, long? lastEventNumber)
         {
             if (!(await ProcessEventsAsync(lastCommitPosition, slice).ConfigureAwait(false)) && !ShouldStop)

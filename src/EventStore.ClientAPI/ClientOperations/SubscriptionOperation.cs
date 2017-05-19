@@ -208,7 +208,7 @@ namespace EventStore.ClientAPI.ClientOperations
 
                 if (reason != SubscriptionDropReason.UserInitiated)
                 {
-                    var er = exc != null ? exc : new Exception(String.Format("Subscription dropped for {0}", reason));
+                    var er = exc ?? new Exception(String.Format("Subscription dropped for {0}", reason));
                     _source.TrySetException(er);
                 }
 
@@ -223,7 +223,7 @@ namespace EventStore.ClientAPI.ClientOperations
         protected void ConfirmSubscription(long lastCommitPosition, long? lastEventNumber)
         {
             if (lastCommitPosition < -1)
-                throw new ArgumentOutOfRangeException("lastCommitPosition", string.Format("Invalid lastCommitPosition {0} on subscription confirmation.", lastCommitPosition));
+                throw new ArgumentOutOfRangeException(nameof(lastCommitPosition), string.Format("Invalid lastCommitPosition {0} on subscription confirmation.", lastCommitPosition));
             if (_subscription != null)
                 throw new Exception("Double confirmation of subscription.");
 

@@ -20,7 +20,7 @@ namespace EventStore.Core.Tests.ClientAPI
     [TestFixture, Category("ClientAPI"), Category("LongRunning")]
     public class catch_up_subscription_handles_errors
     {
-        private static int TimeoutMs = 2000;
+        private static readonly int TimeoutMs = 2000;
         private FakeEventStoreConnection _connection;
         private IList<ResolvedEvent> _raisedEvents;
         private bool _liveProcessingStarted;
@@ -448,7 +448,7 @@ namespace EventStore.Core.Tests.ClientAPI
             throw new NotImplementedException();
         }
 
-        public string ConnectionName { get; private set; }
+        public string ConnectionName { get; }
         public ConnectionSettings Settings { get { return null; } }
 
         public Task ConnectAsync()

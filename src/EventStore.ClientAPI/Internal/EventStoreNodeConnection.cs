@@ -26,29 +26,19 @@ namespace EventStore.ClientAPI.Internal
     /// </remarks>
     internal class EventStoreNodeConnection : IEventStoreConnection, IEventStoreTransactionConnection
     {
-        public string ConnectionName { get { return _connectionName; } }
-
-        private readonly string _connectionName;
-        private readonly ConnectionSettings _settings;
-        private readonly ClusterSettings _clusterSettings;
+        public string ConnectionName { get; }
         private readonly IEndPointDiscoverer _endPointDiscoverer;
         private readonly EventStoreConnectionLogicHandler _handler;
 
         /// <summary>
         /// Returns the <see cref="ConnectionSettings"/> use to create this connection
         /// </summary>
-        public ConnectionSettings Settings
-        {
-            get { return _settings; }
-        }
+        public ConnectionSettings Settings { get; }
 
         /// <summary>
         /// Returns the <see cref="ClusterSettings"/> use to create this connection
         /// </summary>
-        public ClusterSettings ClusterSettings
-        {
-            get { return _clusterSettings; }
-        }
+        public ClusterSettings ClusterSettings { get; }
 
         /// <summary>
         /// Constructs a new instance of a <see cref="EventStoreConnection"/>
@@ -62,9 +52,9 @@ namespace EventStore.ClientAPI.Internal
             Ensure.NotNull(settings, "settings");
             Ensure.NotNull(endPointDiscoverer, "endPointDiscoverer");
 
-            _connectionName = connectionName ?? string.Format("ES-{0}", Guid.NewGuid());
-            _settings = settings;
-            _clusterSettings = clusterSettings;
+            ConnectionName = connectionName ?? string.Format("ES-{0}", Guid.NewGuid());
+            Settings = settings;
+            ClusterSettings = clusterSettings;
             _endPointDiscoverer = endPointDiscoverer;
             _handler = new EventStoreConnectionLogicHandler(this, settings);
         }
@@ -96,7 +86,7 @@ namespace EventStore.ClientAPI.Internal
             Ensure.NotNullOrEmpty(stream, "stream");
 
             var source = new TaskCompletionSource<DeleteResult>();
-            EnqueueOperation(new DeleteStreamOperation(_settings.Log, source, _settings.RequireMaster,
+            EnqueueOperation(new DeleteStreamOperation(Settings.Log, source, Settings.RequireMaster,
                                                        stream, expectedVersion, hardDelete, userCredentials));
             return source.Task;
         }
@@ -124,7 +114,7 @@ namespace EventStore.ClientAPI.Internal
             Ensure.NotNull(events, "events");
 
             var source = new TaskCompletionSource<WriteResult>();
-            EnqueueOperation(new AppendToStreamOperation(_settings.Log, source, _settings.RequireMaster,
+            EnqueueOperation(new AppendToStreamOperation(Settings.Log, source, Settings.RequireMaster,
                                                          stream, expectedVersion, events, userCredentials));
             return source.Task;
 // ReSharper restore PossibleMultipleEnumeration
@@ -138,7 +128,7 @@ namespace EventStore.ClientAPI.Internal
             Ensure.NotNull(events, "events");
 
             var source = new TaskCompletionSource<ConditionalWriteResult>();
-            EnqueueOperation(new ConditionalAppendToStreamOperation(_settings.Log, source, _settings.RequireMaster,
+            EnqueueOperation(new ConditionalAppendToStreamOperation(Settings.Log, source, Settings.RequireMaster,
                                                          stream, expectedVersion, events, userCredentials));
             return source.Task;
             // ReSharper restore PossibleMultipleEnumeration
@@ -149,7 +139,7 @@ namespace EventStore.ClientAPI.Internal
             Ensure.NotNullOrEmpty(stream, "stream");
 
             var source = new TaskCompletionSource<EventStoreTransaction>();
-            EnqueueOperation(new StartTransactionOperation(_settings.Log, source, _settings.RequireMaster,
+            EnqueueOperation(new StartTransactionOperation(Settings.Log, source, Settings.RequireMaster,
                                                            stream, expectedVersion, this, userCredentials));
             return source.Task;
         }
@@ -167,7 +157,7 @@ namespace EventStore.ClientAPI.Internal
             Ensure.NotNull(events, "events");
 
             var source = new TaskCompletionSource<object>();
-            EnqueueOperation(new TransactionalWriteOperation(_settings.Log, source, _settings.RequireMaster,
+            EnqueueOperation(new TransactionalWriteOperation(Settings.Log, source, Settings.RequireMaster,
                                                              transaction.TransactionId, events, userCredentials));
             return source.Task;
 // ReSharper restore PossibleMultipleEnumeration
@@ -178,7 +168,7 @@ namespace EventStore.ClientAPI.Internal
             Ensure.NotNull(transaction, "transaction");
 
             var source = new TaskCompletionSource<WriteResult>();
-            EnqueueOperation(new CommitTransactionOperation(_settings.Log, source, _settings.RequireMaster,
+            EnqueueOperation(new CommitTransactionOperation(Settings.Log, source, Settings.RequireMaster,
                                                             transaction.TransactionId, userCredentials));
             return source.Task;
         }
@@ -187,10 +177,10 @@ namespace EventStore.ClientAPI.Internal
         public Task<EventReadResult> ReadEventAsync(string stream, long eventNumber, bool resolveLinkTos, UserCredentials userCredentials = null)
         {
             Ensure.NotNullOrEmpty(stream, "stream");
-            if (eventNumber < -1) throw new ArgumentOutOfRangeException("eventNumber");
+            if (eventNumber < -1) throw new ArgumentOutOfRangeException(nameof(eventNumber));
             var source = new TaskCompletionSource<EventReadResult>();
-            var operation = new ReadEventOperation(_settings.Log, source, stream, eventNumber, resolveLinkTos,
-                                                   _settings.RequireMaster, userCredentials);
+            var operation = new ReadEventOperation(Settings.Log, source, stream, eventNumber, resolveLinkTos,
+                                                   Settings.RequireMaster, userCredentials);
             EnqueueOperation(operation);
             return source.Task;
         }
@@ -202,8 +192,8 @@ namespace EventStore.ClientAPI.Internal
             Ensure.Positive(count, "count");
             if(count > Consts.MaxReadSize) throw new ArgumentException(string.Format("Count should be less than {0}. For larger reads you should page.", Consts.MaxReadSize));
             var source = new TaskCompletionSource<StreamEventsSlice>();
-            var operation = new ReadStreamEventsForwardOperation(_settings.Log, source, stream, start, count,
-                                                                 resolveLinkTos, _settings.RequireMaster, userCredentials);
+            var operation = new ReadStreamEventsForwardOperation(Settings.Log, source, stream, start, count,
+                                                                 resolveLinkTos, Settings.RequireMaster, userCredentials);
             EnqueueOperation(operation);
             return source.Task;
         }
@@ -214,8 +204,8 @@ namespace EventStore.ClientAPI.Internal
             Ensure.Positive(count, "count");
             if (count > Consts.MaxReadSize) throw new ArgumentException(string.Format("Count should be less than {0}. For larger reads you should page.", Consts.MaxReadSize));
             var source = new TaskCompletionSource<StreamEventsSlice>();
-            var operation = new ReadStreamEventsBackwardOperation(_settings.Log, source, stream, start, count,
-                                                                  resolveLinkTos, _settings.RequireMaster, userCredentials);
+            var operation = new ReadStreamEventsBackwardOperation(Settings.Log, source, stream, start, count,
+                                                                  resolveLinkTos, Settings.RequireMaster, userCredentials);
             EnqueueOperation(operation);
             return source.Task;
         }
@@ -225,8 +215,8 @@ namespace EventStore.ClientAPI.Internal
             Ensure.Positive(maxCount, "maxCount");
             if (maxCount > Consts.MaxReadSize) throw new ArgumentException(string.Format("Count should be less than {0}. For larger reads you should page.", Consts.MaxReadSize));
             var source = new TaskCompletionSource<AllEventsSlice>();
-            var operation = new ReadAllEventsForwardOperation(_settings.Log, source, position, maxCount,
-                                                              resolveLinkTos, _settings.RequireMaster, userCredentials);
+            var operation = new ReadAllEventsForwardOperation(Settings.Log, source, position, maxCount,
+                                                              resolveLinkTos, Settings.RequireMaster, userCredentials);
             EnqueueOperation(operation);
             return source.Task;
         }
@@ -236,19 +226,19 @@ namespace EventStore.ClientAPI.Internal
             Ensure.Positive(maxCount, "maxCount");
             if (maxCount > Consts.MaxReadSize) throw new ArgumentException(string.Format("Count should be less than {0}. For larger reads you should page.", Consts.MaxReadSize));
             var source = new TaskCompletionSource<AllEventsSlice>();
-            var operation = new ReadAllEventsBackwardOperation(_settings.Log, source, position, maxCount,
-                                                               resolveLinkTos, _settings.RequireMaster, userCredentials);
+            var operation = new ReadAllEventsBackwardOperation(Settings.Log, source, position, maxCount,
+                                                               resolveLinkTos, Settings.RequireMaster, userCredentials);
             EnqueueOperation(operation);
             return source.Task;
         }
 
         private void EnqueueOperation(IClientOperation operation)
         {
-            while (_handler.TotalOperationCount >= _settings.MaxQueueSize)
+            while (_handler.TotalOperationCount >= Settings.MaxQueueSize)
             {
                 Thread.Sleep(1);
             }
-            _handler.EnqueueMessage(new StartOperationMessage(operation, _settings.MaxRetries, _settings.OperationTimeout));
+            _handler.EnqueueMessage(new StartOperationMessage(operation, Settings.MaxRetries, Settings.OperationTimeout));
         }
 
         public Task<EventStoreSubscription> SubscribeToStreamAsync(
@@ -264,7 +254,7 @@ namespace EventStore.ClientAPI.Internal
             var source = new TaskCompletionSource<EventStoreSubscription>();
             _handler.EnqueueMessage(new StartSubscriptionMessage(source, stream, resolveLinkTos, userCredentials,
                                                                  eventAppeared, subscriptionDropped,
-                                                                 _settings.MaxRetries, _settings.OperationTimeout));
+                                                                 Settings.MaxRetries, Settings.OperationTimeout));
             return source.Task;
         }
 
@@ -279,7 +269,7 @@ namespace EventStore.ClientAPI.Internal
                                                                          string subscriptionName = "")
         {
             var settings = new CatchUpSubscriptionSettings(Consts.CatchUpDefaultMaxPushQueueSize, readBatchSize,
-                                                                                    _settings.VerboseLogging,
+                                                                                    Settings.VerboseLogging,
                                                                                     resolveLinkTos,
                                                                                     subscriptionName);
             return SubscribeToStreamFrom(stream, lastCheckpoint, settings, eventAppeared, liveProcessingStarted, subscriptionDropped, userCredentials);
@@ -298,7 +288,7 @@ namespace EventStore.ClientAPI.Internal
             Ensure.NotNull(settings, "settings");
             Ensure.NotNull(eventAppeared, "eventAppeared");
             var catchUpSubscription =
-                    new EventStoreStreamCatchUpSubscription(this, _settings.Log, stream, lastCheckpoint,
+                    new EventStoreStreamCatchUpSubscription(this, Settings.Log, stream, lastCheckpoint,
                                                             userCredentials, eventAppeared, liveProcessingStarted,
                                                             subscriptionDropped, settings);
             catchUpSubscription.Start();
@@ -316,7 +306,7 @@ namespace EventStore.ClientAPI.Internal
             var source = new TaskCompletionSource<EventStoreSubscription>();
             _handler.EnqueueMessage(new StartSubscriptionMessage(source, string.Empty, resolveLinkTos, userCredentials,
                                                                  eventAppeared, subscriptionDropped,
-                                                                 _settings.MaxRetries, _settings.OperationTimeout));
+                                                                 Settings.MaxRetries, Settings.OperationTimeout));
             return source.Task;
         }
 
@@ -331,7 +321,7 @@ namespace EventStore.ClientAPI.Internal
             string subscriptionName = "")
         {
             var settings = new CatchUpSubscriptionSettings(Consts.CatchUpDefaultMaxPushQueueSize, readBatchSize,
-                                                                                    _settings.VerboseLogging, resolveLinkTos, subscriptionName);
+                                                                                    Settings.VerboseLogging, resolveLinkTos, subscriptionName);
             return SubscribeToAllFrom(lastCheckpoint, settings,eventAppeared, liveProcessingStarted, subscriptionDropped, userCredentials);
         }
 
@@ -346,7 +336,7 @@ namespace EventStore.ClientAPI.Internal
             Ensure.NotNull(eventAppeared, "eventAppeared");
             Ensure.NotNull(settings, "settings");
             var catchUpSubscription =
-                    new EventStoreAllCatchUpSubscription(this, _settings.Log, lastCheckpoint,
+                    new EventStoreAllCatchUpSubscription(this, Settings.Log, lastCheckpoint,
                                                          userCredentials, eventAppeared, liveProcessingStarted,
                                                          subscriptionDropped, settings);
             catchUpSubscription.Start();
@@ -367,8 +357,8 @@ namespace EventStore.ClientAPI.Internal
             Ensure.NotNull(eventAppeared, "eventAppeared");
 
             var subscription = new EventStorePersistentSubscription(
-                groupName, stream, eventAppeared, subscriptionDropped, userCredentials, _settings.Log,
-                _settings.VerboseLogging, _settings, _handler, bufferSize, autoAck);
+                groupName, stream, eventAppeared, subscriptionDropped, userCredentials, Settings.Log,
+                Settings.VerboseLogging, Settings, _handler, bufferSize, autoAck);
 
             subscription.Start().Wait();
             return subscription;
@@ -388,8 +378,8 @@ namespace EventStore.ClientAPI.Internal
             Ensure.NotNull(eventAppeared, "eventAppeared");
 
             var subscription = new EventStorePersistentSubscription(
-                groupName, stream, eventAppeared, subscriptionDropped, userCredentials, _settings.Log,
-                _settings.VerboseLogging, _settings, _handler, bufferSize, autoAck);
+                groupName, stream, eventAppeared, subscriptionDropped, userCredentials, Settings.Log,
+                Settings.VerboseLogging, Settings, _handler, bufferSize, autoAck);
 
             return subscription.Start();
         }
@@ -419,7 +409,7 @@ namespace EventStore.ClientAPI.Internal
             Ensure.NotNullOrEmpty(groupName, "groupName");
             Ensure.NotNull(settings, "settings");
             var source = new TaskCompletionSource<PersistentSubscriptionCreateResult>();
-            EnqueueOperation(new CreatePersistentSubscriptionOperation(_settings.Log, source, stream, groupName, settings, credentials));
+            EnqueueOperation(new CreatePersistentSubscriptionOperation(Settings.Log, source, stream, groupName, settings, credentials));
             return source.Task;
         }
 
@@ -429,7 +419,7 @@ namespace EventStore.ClientAPI.Internal
             Ensure.NotNullOrEmpty(groupName, "groupName");
             Ensure.NotNull(settings, "settings");
             var source = new TaskCompletionSource<PersistentSubscriptionUpdateResult>();
-            EnqueueOperation(new UpdatePersistentSubscriptionOperation(_settings.Log, source, stream, groupName, settings, credentials));
+            EnqueueOperation(new UpdatePersistentSubscriptionOperation(Settings.Log, source, stream, groupName, settings, credentials));
             return source.Task;
         }
 /*
@@ -448,7 +438,7 @@ namespace EventStore.ClientAPI.Internal
             Ensure.NotNullOrEmpty(stream, "stream");
             Ensure.NotNullOrEmpty(groupName, "groupName");
             var source = new TaskCompletionSource<PersistentSubscriptionDeleteResult>();
-            EnqueueOperation(new DeletePersistentSubscriptionOperation(_settings.Log, source, stream, groupName, userCredentials));
+            EnqueueOperation(new DeletePersistentSubscriptionOperation(Settings.Log, source, stream, groupName, userCredentials));
             return source.Task;
         }
 /*
@@ -472,14 +462,14 @@ namespace EventStore.ClientAPI.Internal
         {
             Ensure.NotNullOrEmpty(stream, "stream");
             if (SystemStreams.IsMetastream(stream))
-                throw new ArgumentException(string.Format("Setting metadata for metastream '{0}' is not supported.", stream), "stream");
+                throw new ArgumentException(string.Format("Setting metadata for metastream '{0}' is not supported.", stream), nameof(stream));
 
             var source = new TaskCompletionSource<WriteResult>();
 
             var metaevent = new EventData(Guid.NewGuid(), SystemEventTypes.StreamMetadata, true, metadata ?? Empty.ByteArray, null);
-            EnqueueOperation(new AppendToStreamOperation(_settings.Log,
+            EnqueueOperation(new AppendToStreamOperation(Settings.Log,
                                                          source,
-                                                         _settings.RequireMaster,
+                                                         Settings.RequireMaster,
                                                          SystemStreams.MetastreamOf(stream),
                                                          expectedMetastreamVersion,
                                                          new[] { metaevent },
