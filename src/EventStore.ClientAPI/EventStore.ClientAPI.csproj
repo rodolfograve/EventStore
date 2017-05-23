@@ -68,7 +68,6 @@
     <Compile Include="ConditionalWriteFailureReason.cs" />
     <Compile Include="ConditionalWriteResult.cs" />
     <Compile Include="ConnectionString.cs" />
-    <Compile Include="Delegates.cs" />
     <Compile Include="EventStorePersistentSubscription.cs" />
     <Compile Include="EventStorePersistentSubscriptionBase.cs" />
     <Compile Include="Exceptions\UserCommandConflictException.cs" />
@@ -223,9 +222,6 @@
     <Compile Include="Transport.Tcp\SocketArgsPool.cs" />
     <Compile Include="Transport.Tcp\TcpConnectionBase.cs" />
     <Compile Include="ClientOperations\AppendToStreamOperation.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
