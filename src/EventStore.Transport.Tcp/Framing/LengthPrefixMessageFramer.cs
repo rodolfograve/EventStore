@@ -45,7 +45,7 @@ namespace EventStore.Transport.Tcp.Framing
         public void UnFrameData(IEnumerable<ArraySegment<byte>> data)
         {
             if (data == null)
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
 
             foreach (ArraySegment<byte> buffer in data)
             {
@@ -117,7 +117,7 @@ namespace EventStore.Transport.Tcp.Framing
         public void RegisterMessageArrivedCallback(Action<ArraySegment<byte>> handler)
         {
             if (handler == null)
-                throw new ArgumentNullException("handler");
+                throw new ArgumentNullException(nameof(handler));
 
             _receivedHandler = handler;
         }

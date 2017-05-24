@@ -61,7 +61,7 @@ namespace EventStore.BufferManagement
         public static void SetDefaultBufferManager(BufferManager manager)
         {
             if (manager == null) 
-                throw new ArgumentNullException("manager");
+                throw new ArgumentNullException(nameof(manager));
             _defaultBufferManager = manager;
         }
 
@@ -123,11 +123,11 @@ namespace EventStore.BufferManagement
         public BufferManager(int segmentChunks, int chunkSize, int initialSegments, bool allowedToCreateMemory)
         {
             if (segmentChunks <= 0)
-                throw new ArgumentException("segmentChunks");
+                throw new ArgumentException(nameof(segmentChunks));
             if (chunkSize <= 0)
-                throw new ArgumentException("chunkSize");
+                throw new ArgumentException(nameof(chunkSize));
             if (initialSegments < 0)
-                throw new ArgumentException("initialSegments");
+                throw new ArgumentException(nameof(initialSegments));
 
             _segmentChunks = segmentChunks;
             _chunkSize = chunkSize;
@@ -258,7 +258,7 @@ namespace EventStore.BufferManagement
         public void CheckIn(IEnumerable<ArraySegment<byte>> buffersToReturn)
         {
             if (buffersToReturn == null)
-                throw new ArgumentNullException("buffersToReturn");
+                throw new ArgumentNullException(nameof(buffersToReturn));
             
             foreach (var buf in buffersToReturn)
             {
@@ -271,9 +271,9 @@ namespace EventStore.BufferManagement
         private void CheckBuffer(ArraySegment<byte> buffer)
         {
             if (buffer.Array == null || buffer.Count == 0 || buffer.Array.Length < buffer.Offset + buffer.Count)
-                throw new Exception("Attempt to check in invalid buffer");
+                throw new ArgumentException("Attempt to check in invalid buffer", nameof(buffer));
             if (buffer.Count != _chunkSize) 
-                throw new ArgumentException("Buffer was not of the same chunk size as the buffer manager", "buffer");
+                throw new ArgumentException("Buffer was not of the same chunk size as the buffer manager", nameof(buffer));
         }
     }
 }

@@ -19,7 +19,7 @@ namespace EventStore.Core.Bus
         public MessageHandler(IHandle<T> handler, string handlerName)
         {
             if (handler == null)
-                throw new ArgumentNullException("handler");
+                throw new ArgumentNullException(nameof(handler));
             _handler = handler;
             HandlerName = handlerName ?? string.Empty;
         }

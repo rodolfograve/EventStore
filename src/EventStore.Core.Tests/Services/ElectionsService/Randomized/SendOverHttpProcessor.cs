@@ -18,8 +18,8 @@ namespace EventStore.Core.Tests.Services.ElectionsService.Randomized
 
         public SendOverHttpProcessor(Random rnd, RandomTestRunner runner, double lossProb, double dupProb, int maxDelay)
         {
-            if (rnd == null) throw new ArgumentNullException("rnd");
-            if (runner == null) throw new ArgumentNullException("runner");
+            if (rnd == null) throw new ArgumentNullException(nameof(rnd));
+            if (runner == null) throw new ArgumentNullException(nameof(runner));
             if (lossProb < 0.0 || lossProb > 1.0) throw new ArgumentOutOfRangeException("lossProb");
             if (dupProb < 0.0 || dupProb > 1.0) throw new ArgumentOutOfRangeException("dupProb");
             if (maxDelay <= 0) throw new ArgumentOutOfRangeException("maxDelay");

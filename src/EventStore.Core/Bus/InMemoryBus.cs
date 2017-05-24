@@ -309,7 +309,7 @@ namespace EventStore.Core.Bus
 
         public void Publish(Message message)
         {
-            //if (message == null) throw new ArgumentNullException("message");
+            //if (message == null) throw new ArgumentNullException(nameof(message));
 
             var handlers = _handlers[message.MsgTypeId];
             for (int i = 0, n = handlers.Count; i < n; ++i)

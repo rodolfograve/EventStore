@@ -30,7 +30,7 @@ namespace EventStore.Core.TransactionLog.Chunks
             Ensure.Nonnegative(mapSize, "mapSize");
             Ensure.NotNull(md5Hash, "md5Hash");
             if (md5Hash.Length != ChecksumSize)
-                throw new ArgumentException("MD5Hash is of wrong length.", "md5Hash");
+                throw new ArgumentException("MD5Hash is of wrong length.", nameof(md5Hash));
 
             IsCompleted = isCompleted;
             IsMap12Bytes = isMap12Bytes;

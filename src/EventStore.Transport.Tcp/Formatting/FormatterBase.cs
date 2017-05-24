@@ -44,7 +44,7 @@ namespace EventStore.Transport.Tcp.Formatting
         public virtual T From(BufferPool bufferPool)
         {
             if (bufferPool == null) 
-                throw new ArgumentNullException("bufferPool");
+                throw new ArgumentNullException(nameof(bufferPool));
             var stream = new BufferPoolStream(bufferPool);
             return From(stream);
         }
@@ -70,7 +70,7 @@ namespace EventStore.Transport.Tcp.Formatting
         public virtual T From(byte[] array)
         {
             if (array == null)
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             using (var stream = new MemoryStream(array, 0, array.Length, false))
             {
                 return From(stream);

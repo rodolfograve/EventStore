@@ -127,12 +127,12 @@ namespace EventStore.Projections.Core.Services.Management
             Guid slaveMasterWorkerId = default(Guid),
             Guid slaveMasterCorrelationId = default(Guid))
         {
-            if (id == Guid.Empty) throw new ArgumentException("id");
-            if (name == null) throw new ArgumentNullException("name");
-            if (output == null) throw new ArgumentNullException("output");
-            if (getStateDispatcher == null) throw new ArgumentNullException("getStateDispatcher");
-            if (getResultDispatcher == null) throw new ArgumentNullException("getResultDispatcher");
-            if (name == "") throw new ArgumentException("name");
+            if (id == Guid.Empty) throw new ArgumentException(nameof(id));
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (output == null) throw new ArgumentNullException(nameof(output));
+            if (getStateDispatcher == null) throw new ArgumentNullException(nameof(getStateDispatcher));
+            if (getResultDispatcher == null) throw new ArgumentNullException(nameof(getResultDispatcher));
+            if (name == "") throw new ArgumentException(nameof(name));
             _workerId = workerId;
             _id = id;
             _projectionId = projectionId;
@@ -650,9 +650,9 @@ namespace EventStore.Projections.Core.Services.Management
             var handlerType = persistedState.HandlerType;
             var query = persistedState.Query;
 
-            if (handlerType == null) throw new ArgumentNullException("persistedState", "HandlerType");
-            if (query == null) throw new ArgumentNullException("persistedState", "Query");
-            if (handlerType == "") throw new ArgumentException("HandlerType", "persistedState");
+            if (handlerType == null) throw new ArgumentNullException(nameof(persistedState), nameof(persistedState.HandlerType));
+            if (query == null) throw new ArgumentNullException(nameof(persistedState), nameof(persistedState.Query));
+            if (handlerType == "") throw new ArgumentException(nameof(persistedState.HandlerType), nameof(persistedState));
 
             if (_state != ManagedProjectionState.Creating && _state != ManagedProjectionState.Loading)
                 throw new InvalidOperationException("LoadPersistedState is now allowed in this state");
@@ -766,7 +766,7 @@ namespace EventStore.Projections.Core.Services.Management
 
         private void Prepare(ProjectionConfig config, Message message)
         {
-            if (config == null) throw new ArgumentNullException("config");
+            if (config == null) throw new ArgumentNullException(nameof(config));
             if (_state >= ManagedProjectionState.Preparing)
             {
                 DisposeCoreProjection();

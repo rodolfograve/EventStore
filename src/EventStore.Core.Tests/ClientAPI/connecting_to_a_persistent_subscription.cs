@@ -711,8 +711,8 @@ namespace EventStore.Core.Tests.ClientAPI
     [TestFixture, Category("LongRunning")]
     public class connect_to_persistent_subscription_with_link_to_event_with_event_number_greater_than_int_maxvalue : ExpectedVersion64Bit.MiniNodeWithExistingRecords
     {
-        private const string StreamName = "connect_to_persistent_subscription_with_link_to_event_with_event_number_greater_than_int_maxvalue";
-        private const long intMaxValue = (long)int.MaxValue;
+        private const string StreamName = nameof(connect_to_persistent_subscription_with_link_to_event_with_event_number_greater_than_int_maxvalue);
+        private const long intMaxValue = int.MaxValue;
 
         private string _linkedStreamName = "linked-" + StreamName;
         private const string _group = "group-" + StreamName;

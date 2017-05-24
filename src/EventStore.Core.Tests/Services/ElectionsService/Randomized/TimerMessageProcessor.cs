@@ -22,10 +22,10 @@ namespace EventStore.Core.Tests.Services.ElectionsService.Randomized
                                      int delayMin, 
                                      int delayMax)
         {
-            if (rnd == null) throw new ArgumentNullException("rnd");
-            if (runner == null) throw new ArgumentNullException("runner");
-            if (endPoint == null) throw new ArgumentNullException("endPoint");
-            if (bus == null) throw new ArgumentNullException("bus");
+            if (rnd == null) throw new ArgumentNullException(nameof(rnd));
+            if (runner == null) throw new ArgumentNullException(nameof(runner));
+            if (endPoint == null) throw new ArgumentNullException(nameof(endPoint));
+            if (bus == null) throw new ArgumentNullException(nameof(bus));
             if (delayMin <= 0) throw new ArgumentOutOfRangeException("delayMin");
             if (delayMin >= delayMax) throw new ArgumentException("DelayMin should be strictly less than DelayMax.");
 

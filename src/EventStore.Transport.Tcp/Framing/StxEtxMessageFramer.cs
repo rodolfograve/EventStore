@@ -28,7 +28,7 @@ namespace EventStore.Transport.Tcp.Framing
         /// <param name="initialBufferSize">Initial size of the Buffer.</param>
         public StxEtxMessageFramer(int initialBufferSize)
         {
-            if (initialBufferSize < 1) throw new ArgumentException("Buffer size must be greater than zero.");
+            if (initialBufferSize < 1) throw new ArgumentException("Buffer size must be greater than zero.", nameof(initialBufferSize));
             _messageBuffer = new byte[initialBufferSize];
             _currentState = ParserState.AwaitingStx;
         }
@@ -36,7 +36,7 @@ namespace EventStore.Transport.Tcp.Framing
         public void UnFrameData(IEnumerable<ArraySegment<byte>> data)
         {
             if (data == null)
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
 
             foreach (ArraySegment<byte> buffer in data)
             {
@@ -93,7 +93,7 @@ namespace EventStore.Transport.Tcp.Framing
         public void RegisterMessageArrivedCallback(Action<ArraySegment<byte>> handler)
         {
             if (handler == null)
-                throw new ArgumentNullException("handler");
+                throw new ArgumentNullException(nameof(handler));
             _receivedHandler = handler;
         }
     }

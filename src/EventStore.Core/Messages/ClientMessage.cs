@@ -210,7 +210,7 @@ namespace EventStore.Core.Messages
             public WriteEventsCompleted(Guid correlationId, OperationResult result, string message, long currentVersion = -1)
             {
                 if (result == OperationResult.Success)
-                    throw new ArgumentException("Invalid constructor used for successful write.", "result");
+                    throw new ArgumentException("Invalid constructor used for successful write.", nameof(result));
 
                 CorrelationId = correlationId;
                 Result = result;
@@ -383,7 +383,7 @@ namespace EventStore.Core.Messages
             public TransactionCommitCompleted(Guid correlationId, long transactionId, OperationResult result, string message)
             {
                 if (result == OperationResult.Success)
-                    throw new ArgumentException("Invalid constructor used for successful write.", "result");
+                    throw new ArgumentException("Invalid constructor used for successful write.", nameof(result));
 
                 CorrelationId = correlationId;
                 TransactionId = transactionId;

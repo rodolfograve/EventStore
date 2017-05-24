@@ -19,7 +19,7 @@ namespace EventStore.Projections.Core.Services.Processing
             if (previous.Phase < Phase)
                 return true;
             if (previous.Mode_ != CheckpointTag.Mode.ByStream)
-                throw new ArgumentException("Mode.Stream expected", "previous");
+                throw new ArgumentException("Mode.Stream expected", nameof(previous));
             return committedEvent.Data.PositionStreamId == _catalogStream
                    && committedEvent.Data.PositionSequenceNumber > previous.CatalogPosition;
         }

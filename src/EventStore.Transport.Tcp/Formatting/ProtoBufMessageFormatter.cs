@@ -44,7 +44,7 @@ namespace EventStore.Transport.Tcp.Formatting
         public override BufferPool ToBufferPool(T message)
         {
             if (message == null)
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
 
             var bufferPool = new BufferPool(_initialBuffers, _bufferManager);
             var stream = new BufferPoolStream(bufferPool);
@@ -60,7 +60,7 @@ namespace EventStore.Transport.Tcp.Formatting
         public override T From(Stream stream)
         {
             if (stream == null)
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
             return ProtoBuf.Serializer.Deserialize<T>(stream);
         }
     }

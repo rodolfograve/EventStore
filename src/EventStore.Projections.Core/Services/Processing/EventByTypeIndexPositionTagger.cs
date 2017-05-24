@@ -16,7 +16,7 @@ namespace EventStore.Projections.Core.Services.Processing
             int phase, string[] eventTypes, bool includeStreamDeletedNotification = false)
             : base(phase)
         {
-            if (eventTypes == null) throw new ArgumentNullException("eventTypes");
+            if (eventTypes == null) throw new ArgumentNullException(nameof(eventTypes));
             if (eventTypes.Length == 0) throw new ArgumentException("eventTypes");
             _eventTypes = new HashSet<string>(eventTypes);
             if (includeStreamDeletedNotification)
@@ -31,9 +31,9 @@ namespace EventStore.Projections.Core.Services.Processing
             if (previous.Phase < Phase)
                 return true;
             if (previous.Mode_ != CheckpointTag.Mode.EventTypeIndex)
-                throw new ArgumentException("Mode.EventTypeIndex expected", "previous");
+                throw new ArgumentException("Mode.EventTypeIndex expected", nameof(previous));
             if (committedEvent.Data.EventOrLinkTargetPosition.CommitPosition <= 0)
-                throw new ArgumentException("complete TF position required", "committedEvent");
+                throw new ArgumentException("complete TF position required", nameof(committedEvent));
 
             return committedEvent.Data.EventOrLinkTargetPosition > previous.Position;
         }

@@ -158,9 +158,9 @@ namespace EventStore.Projections.Core.Services.Processing
         {
             DateTime timestamp = default(DateTime);
             if (Guid.Empty == eventId)
-                throw new ArgumentException("Empty eventId provided.");
+                throw new ArgumentException("Empty eventId provided.", nameof(eventId));
             if (string.IsNullOrEmpty(eventType))
-                throw new ArgumentException("Empty eventType provided.");
+                throw new ArgumentException("Empty eventType provided.", nameof(eventType));
 
             _positionStreamId = positionStreamId;
             _positionSequenceNumber = positionSequenceNumber;

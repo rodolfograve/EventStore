@@ -65,11 +65,11 @@ namespace EventStore.ClientAPI.Transport.Tcp
                                   TimeSpan connectionTimeout)
         {
             if (serverEndPoint == null)
-                throw new ArgumentNullException("serverEndPoint");
+                throw new ArgumentNullException(nameof(serverEndPoint));
             if (onConnectionEstablished == null)
-                throw new ArgumentNullException("onConnectionEstablished");
+                throw new ArgumentNullException(nameof(onConnectionEstablished));
             if (onConnectionFailed == null)
-                throw new ArgumentNullException("onConnectionFailed");
+                throw new ArgumentNullException(nameof(onConnectionFailed));
 
             var socketArgs = _connectSocketArgsPool.Get();
             var connectingSocket = new Socket(serverEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);

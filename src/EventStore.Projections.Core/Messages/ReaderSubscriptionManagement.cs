@@ -37,8 +37,8 @@ namespace EventStore.Projections.Core.Messages
                 Guid subscriptionId, CheckpointTag from,
                 IReaderStrategy readerStrategy, ReaderSubscriptionOptions readerSubscriptionOptions): base(subscriptionId)
             {
-                if (@from == null) throw new ArgumentNullException("from");
-                if (readerStrategy == null) throw new ArgumentNullException("readerStrategy");
+                if (@from == null) throw new ArgumentNullException(nameof(from));
+                if (readerStrategy == null) throw new ArgumentNullException(nameof(readerStrategy));
                 _fromPosition = @from;
                 _readerStrategy = readerStrategy;
                 _options = readerSubscriptionOptions;

@@ -41,7 +41,7 @@ namespace EventStore.Projections.Core.Services.Processing
             : base(publisher, eventReaderCorrelationId, readAs, stopOnEof)
         {
             if (fromSequenceNumber < 0) throw new ArgumentException("fromSequenceNumber");
-            if (streamName == null) throw new ArgumentNullException("streamName");
+            if (streamName == null) throw new ArgumentNullException(nameof(streamName));
             if (string.IsNullOrEmpty(streamName)) throw new ArgumentException("streamName");
             _streamName = streamName;
             _fromSequenceNumber = fromSequenceNumber;

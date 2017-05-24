@@ -344,7 +344,7 @@ namespace EventStore.Projections.Core.Services.Processing
             Guid eventReaderId, IPublisher publisher, IODispatcher ioDispatcher, CheckpointTag checkpointTag,
             bool stopOnEof, int? stopAfterNEvents, bool resolveLinkTos, string catalogStream)
         {
-            if (!stopOnEof) throw new ArgumentException("stopOnEof must be true", "stopOnEof");
+            if (!stopOnEof) throw new ArgumentException("must be true", nameof(stopOnEof));
 
             var startFromCatalogEventNumber = checkpointTag.CatalogPosition + 1; // read catalog from the next position
             var startFromDataStreamName = checkpointTag.DataStream;

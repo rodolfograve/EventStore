@@ -25,13 +25,13 @@ namespace EventStore.Core.DataStructures
         public PairingHeap(IComparer<T> comparer): this(null, comparer)
         {
             if (comparer == null)
-                throw new ArgumentNullException("comparer");
+                throw new ArgumentNullException(nameof(comparer));
         }
 
         public PairingHeap(Func<T, T, bool> compare): this(null, compare)
         {
             if (compare == null)
-                throw new ArgumentNullException("compare");
+                throw new ArgumentNullException(nameof(compare));
         }
 
         public PairingHeap(IEnumerable<T> items): this(items, null as IComparer<T>)
@@ -176,7 +176,7 @@ namespace EventStore.Core.DataStructures
                 if (count < 0)
                     throw new ArgumentOutOfRangeException();
                 if (creator == null)
-                    throw new ArgumentNullException("creator");
+                    throw new ArgumentNullException(nameof(creator));
 
                 _count = count;
                 _creator = creator;

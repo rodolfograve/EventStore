@@ -128,7 +128,7 @@ namespace EventStore.Projections.Core.Services.v8
             CheckpointTag eventPosition, string category, ResolvedEvent @event)
         {
             CheckDisposed();
-            if (@event == null) throw new ArgumentNullException("event");
+            if (@event == null) throw new ArgumentNullException(nameof(@event));
             var partition = _query.GetPartition(
                 @event.Data.Trim(), // trimming data passed to a JS 
                 new string[]
@@ -146,7 +146,7 @@ namespace EventStore.Projections.Core.Services.v8
         public string TransformCatalogEvent(CheckpointTag eventPosition, ResolvedEvent data)
         {
             CheckDisposed();
-            if (data == null) throw new ArgumentNullException("data");
+            if (data == null) throw new ArgumentNullException(nameof(data));
 
             return _query.TransformCatalogEvent(
                 (data.Data ?? "").Trim(), // trimming data passed to a JS 

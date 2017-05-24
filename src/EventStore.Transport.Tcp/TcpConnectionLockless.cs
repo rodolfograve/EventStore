@@ -219,7 +219,7 @@ namespace EventStore.Transport.Tcp
         public void ReceiveAsync(Action<ITcpConnection, IEnumerable<ArraySegment<byte>>> callback)
         {
             if (callback == null)
-                throw new ArgumentNullException("callback");
+                throw new ArgumentNullException(nameof(callback));
 
             if (Interlocked.Exchange(ref _receiveCallback, callback) != null)
                 throw new InvalidOperationException("ReceiveAsync called again while previous call was not fulfilled");

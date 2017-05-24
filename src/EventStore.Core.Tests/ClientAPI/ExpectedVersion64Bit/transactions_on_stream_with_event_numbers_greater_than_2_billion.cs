@@ -9,8 +9,8 @@ namespace EventStore.Core.Tests.ClientAPI.ExpectedVersion64Bit
     [Category("ClientAPI"), Category("LongRunning")]
     public class transactions_on_stream_with_event_numbers_greater_than_2_billion : MiniNodeWithExistingRecords
     {
-        private const string StreamName = "transactions_on_stream_with_event_numbers_greater_than_2_billion";
-        private const long intMaxValue = (long)int.MaxValue;
+        private const string StreamName = nameof(transactions_on_stream_with_event_numbers_greater_than_2_billion);
+        private const long intMaxValue = int.MaxValue;
 
         private EventRecord _r1, _r2, _r3, _r4, _r5;
 

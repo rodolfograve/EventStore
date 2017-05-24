@@ -20,7 +20,7 @@ namespace EventStore.Projections.Core.Services.Processing
             CheckpointTag previous, ReaderSubscriptionMessage.CommittedEventDistributed committedEvent)
         {
             if (committedEvent.PreTagged == null)
-                throw new ArgumentException("committedEvent.PreTagged == null", "committedEvent");
+                throw new ArgumentException("committedEvent.PreTagged == null", nameof(committedEvent));
             if (previous.Phase < Phase)
                 return true;
 
@@ -31,7 +31,7 @@ namespace EventStore.Projections.Core.Services.Processing
             CheckpointTag previous, ReaderSubscriptionMessage.CommittedEventDistributed committedEvent)
         {
             if (committedEvent.PreTagged == null)
-                throw new ArgumentException("committedEvent.PreTagged == null", "committedEvent");
+                throw new ArgumentException("committedEvent.PreTagged == null", nameof(committedEvent));
 
             if (previous.Phase != Phase)
                 throw new ArgumentException(
@@ -43,7 +43,7 @@ namespace EventStore.Projections.Core.Services.Processing
         public override CheckpointTag MakeCheckpointTag(CheckpointTag previous, ReaderSubscriptionMessage.EventReaderPartitionEof partitionEof)
         {
             if (partitionEof.PreTagged == null)
-                throw new ArgumentException("committedEvent.PreTagged == null", "committedEvent");
+                throw new ArgumentException("committedEvent.PreTagged == null", nameof(partitionEof));
 
             if (previous.Phase != Phase)
                 throw new ArgumentException(
@@ -56,7 +56,7 @@ namespace EventStore.Projections.Core.Services.Processing
             CheckpointTag previous, ReaderSubscriptionMessage.EventReaderPartitionDeleted partitionDeleted)
         {
             if (partitionDeleted.PreTagged == null)
-                throw new ArgumentException("committedEvent.PreTagged == null", "committedEvent");
+                throw new ArgumentException("committedEvent.PreTagged == null", nameof(partitionDeleted));
 
             if (previous.Phase != Phase)
                 throw new ArgumentException(

@@ -47,7 +47,7 @@ namespace EventStore.ClientAPI.Embedded
                     .GetManifestResourceStream(_resourceNamespace + "." + name))
                 {
                     if (stream == null)
-                        throw new ArgumentNullException("name");
+                        throw new ArgumentNullException(nameof(name));
 
                     var resource = new byte[stream.Length];
 

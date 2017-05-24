@@ -16,9 +16,9 @@ namespace EventStore.Core.Tests.Services.ElectionsService.Randomized
 
         public InnerBusMessagesProcessor(RandomTestRunner runner, IPEndPoint endPoint, IPublisher bus)
         {
-            if (runner == null) throw new ArgumentNullException("runner");
-            if (endPoint == null) throw new ArgumentNullException("endPoint");
-            if (bus == null) throw new ArgumentNullException("bus");
+            if (runner == null) throw new ArgumentNullException(nameof(runner));
+            if (endPoint == null) throw new ArgumentNullException(nameof(endPoint));
+            if (bus == null) throw new ArgumentNullException(nameof(bus));
 
             _runner = runner;
             _endPoint = endPoint;

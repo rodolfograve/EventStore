@@ -46,7 +46,7 @@ namespace EventStore.Core.Helpers
 
         public void UnFrameData(IEnumerable<ArraySegment<byte>> data)
         {
-            if (data == null) throw new ArgumentNullException("data");
+            if (data == null) throw new ArgumentNullException(nameof(data));
 
             foreach (ArraySegment<byte> buffer in data)
             {

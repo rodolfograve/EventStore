@@ -50,7 +50,7 @@ namespace EventStore.Projections.Core.Services.Processing
             if (previous.Phase < Phase)
                 return true;
             if (previous.Mode_ != CheckpointTag.Mode.Position)
-                throw new ArgumentException("Mode.Position expected", "previous");
+                throw new ArgumentException("Mode.Position expected", nameof(previous));
             return committedEvent.Data.Position > previous.Position;
         }
 

@@ -20,8 +20,8 @@ namespace EventStore.Projections.Core.Services.Processing
             PartitionState oldSharedState, PartitionState newSharedState, EmittedEventEnvelope[] emittedEvents,
             Guid causedBy, string correlationId, bool isPartitionTombstone = false)
         {
-            if (partition == null) throw new ArgumentNullException("partition");
-            if (checkpointTag == null) throw new ArgumentNullException("checkpointTag");
+            if (partition == null) throw new ArgumentNullException(nameof(partition));
+            if (checkpointTag == null) throw new ArgumentNullException(nameof(checkpointTag));
             _emittedEvents = emittedEvents;
             _causedBy = causedBy;
             _correlationId = correlationId;

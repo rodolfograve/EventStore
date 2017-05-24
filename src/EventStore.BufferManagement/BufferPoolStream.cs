@@ -34,7 +34,7 @@ namespace EventStore.BufferManagement
         public BufferPoolStream(BufferPool bufferPool)
         {
             if (bufferPool == null) 
-                throw new ArgumentNullException("bufferPool");
+                throw new ArgumentNullException(nameof(bufferPool));
             _bufferPool = bufferPool;
         }
 

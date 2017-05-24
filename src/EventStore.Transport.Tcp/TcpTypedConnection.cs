@@ -33,9 +33,9 @@ namespace EventStore.Transport.Tcp
                                   IMessageFramer framer)
         {
             if (formatter == null)
-                throw new ArgumentNullException("formatter");
+                throw new ArgumentNullException(nameof(formatter));
             if (framer == null)
-                throw new ArgumentNullException("framer");
+                throw new ArgumentNullException(nameof(framer));
 
             _connection = connection;
             _formatter = formatter;
@@ -65,7 +65,7 @@ namespace EventStore.Transport.Tcp
                 throw new InvalidOperationException("ReceiveAsync should be called just once.");
 
             if (callback == null)
-                throw new ArgumentNullException("callback");
+                throw new ArgumentNullException(nameof(callback));
 
             _receiveCallback = callback;
 

@@ -200,7 +200,7 @@ namespace EventStore.ClientAPI.Transport.Tcp
         public void ReceiveAsync(Action<ITcpConnection, IEnumerable<ArraySegment<byte>>> callback)
         {
             if (callback == null)
-                throw new ArgumentNullException("callback");
+                throw new ArgumentNullException(nameof(callback));
 
             if (Interlocked.Exchange(ref _receiveCallback, callback) != null)
                 throw new InvalidOperationException("ReceiveAsync called again while previous call was not fulfilled");
@@ -303,7 +303,8 @@ namespace EventStore.ClientAPI.Transport.Tcp
             CloseSocket();
             if (Interlocked.CompareExchange(ref _sending, 1, 0) == 0)
                 ReturnSendingSocketArgs();
-            _onConnectionClosed?.Invoke(this, socketError);
+            if (_onConnectionClosed != null)
+                _onConnectionClosed(this, socketError);
         }
 
         private void CloseSocket()

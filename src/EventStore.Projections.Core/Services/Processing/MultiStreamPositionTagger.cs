@@ -12,7 +12,7 @@ namespace EventStore.Projections.Core.Services.Processing
 
         public MultiStreamPositionTagger(int phase, string[] streams): base(phase)
         {
-            if (streams == null) throw new ArgumentNullException("streams");
+            if (streams == null) throw new ArgumentNullException(nameof(streams));
             if (streams.Length == 0) throw new ArgumentException("streams");
             _streams = new HashSet<string>(streams);
         }
@@ -23,7 +23,7 @@ namespace EventStore.Projections.Core.Services.Processing
             if (previous.Phase < Phase)
                 return true;
             if (previous.Mode_ != CheckpointTag.Mode.MultiStream)
-                throw new ArgumentException("Mode.MultiStream expected", "previous");
+                throw new ArgumentException("Mode.MultiStream expected", nameof(previous));
             return _streams.Contains(committedEvent.Data.PositionStreamId)
                    && committedEvent.Data.PositionSequenceNumber > previous.Streams[committedEvent.Data.PositionStreamId];
         }

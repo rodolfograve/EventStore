@@ -10,8 +10,8 @@ namespace EventStore.Core.Tests.ClientAPI.ExpectedVersion64Bit
     [Category("ClientAPI"), Category("LongRunning")]
     public class read_stream_with_link_to_event_with_event_number_greater_than_int_maxvalue : MiniNodeWithExistingRecords
     {
-        private const string StreamName = "read_stream_with_link_to_event_with_event_number_greater_than_int_maxvalue";
-        private const long intMaxValue = (long)int.MaxValue;
+        private const string StreamName = nameof(read_stream_with_link_to_event_with_event_number_greater_than_int_maxvalue);
+        private const long intMaxValue = int.MaxValue;
 
         private string _linkedStreamName = "linked-" + StreamName;
         private EventRecord _event1, _event2;

@@ -69,8 +69,8 @@ namespace EventStore.Projections.Core.Services.Processing
             Phase = phase;
             foreach (var stream in streams)
             {
-                if (stream.Key == "") throw new ArgumentException("Empty stream name", "streams");
-                if (stream.Value < 0 && stream.Value != ExpectedVersion.NoStream) throw new ArgumentException("Invalid sequence number", "streams");
+                if (stream.Key == "") throw new ArgumentException("Empty stream name", nameof(streams));
+                if (stream.Value < 0 && stream.Value != ExpectedVersion.NoStream) throw new ArgumentException("Invalid sequence number", nameof(streams));
             }
             Streams = new Dictionary<string, long>(streams); // clone
             Position = new TFPos(Int64.MinValue, Int64.MinValue);
@@ -83,8 +83,8 @@ namespace EventStore.Projections.Core.Services.Processing
             Position = position;
             foreach (var stream in eventTypes)
             {
-                if (stream.Key == "") throw new ArgumentException("Empty stream name", "eventTypes");
-                if (stream.Value < 0 && stream.Value != ExpectedVersion.NoStream) throw new ArgumentException("Invalid sequence number", "eventTypes");
+                if (stream.Key == "") throw new ArgumentException("Empty stream name", nameof(eventTypes));
+                if (stream.Value < 0 && stream.Value != ExpectedVersion.NoStream) throw new ArgumentException("Invalid sequence number", nameof(eventTypes));
             }
             Streams = new Dictionary<string, long>(eventTypes); // clone
             Mode_ = CalculateMode();
@@ -93,7 +93,7 @@ namespace EventStore.Projections.Core.Services.Processing
         private CheckpointTag(int phase, string stream, long sequenceNumber)
         {
             Phase = phase;
-            if (stream == null) throw new ArgumentNullException("stream");
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
             if (stream == "") throw new ArgumentException("stream");
             if (sequenceNumber < 0 && sequenceNumber != ExpectedVersion.NoStream) throw new ArgumentException("sequenceNumber");
             Position = new TFPos(Int64.MinValue, Int64.MinValue);
@@ -484,7 +484,7 @@ namespace EventStore.Projections.Core.Services.Processing
         public CheckpointTag UpdateStreamPosition(string streamId, long eventSequenceNumber)
         {
             if (Mode_ != Mode.MultiStream)
-                throw new ArgumentException("Invalid tag mode", "tag");
+                throw new ArgumentException("Invalid tag mode", nameof(Mode_));
             var resultDictionary = PatchStreamsDictionary(streamId, eventSequenceNumber);
             return FromStreamPositions(Phase, resultDictionary);
         }
@@ -492,7 +492,7 @@ namespace EventStore.Projections.Core.Services.Processing
         public CheckpointTag UpdateEventTypeIndexPosition(TFPos position, string eventType, long eventSequenceNumber)
         {
             if (Mode_ != Mode.EventTypeIndex)
-                throw new ArgumentException("Invalid tag mode", "tag");
+                throw new ArgumentException("Invalid tag mode", nameof(Mode_));
             var resultDictionary = PatchStreamsDictionary(eventType, eventSequenceNumber);
             return FromEventTypeIndexPositions(Phase, position, resultDictionary);
         }
@@ -500,7 +500,7 @@ namespace EventStore.Projections.Core.Services.Processing
         public CheckpointTag UpdateEventTypeIndexPosition(TFPos position)
         {
             if (Mode_ != Mode.EventTypeIndex)
-                throw new ArgumentException("Invalid tag mode", "tag");
+                throw new ArgumentException("Invalid tag mode", nameof(Mode_));
             return FromEventTypeIndexPositions(Phase, position, Streams);
         }
 
@@ -532,7 +532,7 @@ namespace EventStore.Projections.Core.Services.Processing
 
         public byte[] ToJsonBytes(ProjectionVersion projectionVersion, IEnumerable<KeyValuePair<string, JToken>> extraMetaData = null)
         {
-            if (projectionVersion.ProjectionId == -1) throw new ArgumentException("projectionId is required", "projectionVersion");
+            if (projectionVersion.ProjectionId == -1) throw new ArgumentException("projectionId is required", nameof(projectionVersion));
 
             using (var memoryStream = new MemoryStream())
             {
@@ -547,7 +547,7 @@ namespace EventStore.Projections.Core.Services.Processing
 
         public string ToJsonString(ProjectionVersion projectionVersion, IEnumerable<KeyValuePair<string, JToken>> extraMetaData = null)
         {
-            if (projectionVersion.ProjectionId == -1) throw new ArgumentException("projectionId is required", "projectionVersion");
+            if (projectionVersion.ProjectionId == -1) throw new ArgumentException("projectionId is required", nameof(projectionVersion));
 
             using (var textWriter = new StringWriter())
             {

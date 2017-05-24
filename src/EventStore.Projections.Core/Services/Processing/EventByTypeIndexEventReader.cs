@@ -57,9 +57,9 @@ namespace EventStore.Projections.Core.Services.Processing
             bool stopOnEof = false)
             : base(publisher, eventReaderCorrelationId, readAs, stopOnEof)
         {
-            if (eventTypes == null) throw new ArgumentNullException("eventTypes");
-            if (timeProvider == null) throw new ArgumentNullException("timeProvider");
-            if (eventTypes.Length == 0) throw new ArgumentException("empty", "eventTypes");
+            if (eventTypes == null) throw new ArgumentNullException(nameof(eventTypes));
+            if (timeProvider == null) throw new ArgumentNullException(nameof(timeProvider));
+            if (eventTypes.Length == 0) throw new ArgumentException("empty", nameof(eventTypes));
 
             _includeDeletedStreamNotification = includeDeletedStreamNotification;
             _timeProvider = timeProvider;
@@ -79,7 +79,7 @@ namespace EventStore.Projections.Core.Services.Processing
         private void ValidateTag(Dictionary<string, long> fromPositions)
         {
             if (_eventTypes.Count != fromPositions.Count)
-                throw new ArgumentException("Number of streams does not match", "fromPositions");
+                throw new ArgumentException("Number of streams does not match", nameof(fromPositions));
 
             foreach (var stream in _streamToEventType.Keys.Where(stream => !fromPositions.ContainsKey(stream)))
             {

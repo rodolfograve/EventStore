@@ -9,8 +9,8 @@ namespace EventStore.Core.Tests.ClientAPI.ExpectedVersion64Bit
     [Category("ClientAPI"), Category("LongRunning")]
     public class append_to_stream_with_event_numbers_greater_than_2_billion : MiniNodeWithExistingRecords
     {
-        private const string StreamName = "append_to_stream_with_event_numbers_greater_than_2_billion";
-        private const long intMaxValue = (long)int.MaxValue;
+        private const string StreamName = nameof(append_to_stream_with_event_numbers_greater_than_2_billion);
+        private const long intMaxValue = int.MaxValue;
 
         public override void WriteTestScenario()
         {

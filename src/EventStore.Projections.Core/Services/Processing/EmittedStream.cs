@@ -133,12 +133,12 @@ namespace EventStore.Projections.Core.Services.Processing
             PositionTagger positionTagger, CheckpointTag fromCheckpointPosition, IODispatcher ioDispatcher,
             IEmittedStreamContainer readyHandler, bool noCheckpoints = false)
         {
-            if (string.IsNullOrEmpty(streamId)) throw new ArgumentNullException("streamId");
-            if (writerConfiguration == null) throw new ArgumentNullException("writerConfiguration");
-            if (positionTagger == null) throw new ArgumentNullException("positionTagger");
-            if (fromCheckpointPosition == null) throw new ArgumentNullException("fromCheckpointPosition");
-            if (ioDispatcher == null) throw new ArgumentNullException("ioDispatcher");
-            if (readyHandler == null) throw new ArgumentNullException("readyHandler");
+            if (string.IsNullOrEmpty(streamId)) throw new ArgumentNullException(nameof(streamId));
+            if (writerConfiguration == null) throw new ArgumentNullException(nameof(writerConfiguration));
+            if (positionTagger == null) throw new ArgumentNullException(nameof(positionTagger));
+            if (fromCheckpointPosition == null) throw new ArgumentNullException(nameof(fromCheckpointPosition));
+            if (ioDispatcher == null) throw new ArgumentNullException(nameof(ioDispatcher));
+            if (readyHandler == null) throw new ArgumentNullException(nameof(readyHandler));
             _streamId = streamId;
             _metadataStreamId = SystemStreams.MetastreamOf(streamId);
             _writerConfiguration = writerConfiguration;
@@ -157,7 +157,7 @@ namespace EventStore.Projections.Core.Services.Processing
 
         public void EmitEvents(EmittedEvent[] events)
         {
-            if (events == null) throw new ArgumentNullException("events");
+            if (events == null) throw new ArgumentNullException(nameof(events));
             CheckpointTag groupCausedBy = null;
             foreach (var @event in events)
             {
@@ -172,7 +172,7 @@ namespace EventStore.Projections.Core.Services.Processing
                 else if (@event.CausedByTag != groupCausedBy)
                     throw new ArgumentException("events must share the same CausedByTag");
                 if (@event.StreamId != _streamId)
-                    throw new ArgumentException("Invalid streamId", "events");
+                    throw new ArgumentException("Invalid streamId", nameof(events));
             }
             EnsureCheckpointNotRequested();
             foreach (var @event in events)

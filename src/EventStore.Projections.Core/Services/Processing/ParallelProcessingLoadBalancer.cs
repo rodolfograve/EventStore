@@ -40,7 +40,7 @@ namespace EventStore.Projections.Core.Services.Processing
         public ParallelProcessingLoadBalancer(
             int workers, long maxScheduledSizePerWorker, int maxUnmeasuredTasksPerWorker)
         {
-            if (workers <= 0) throw new ArgumentException("At least one worker required", "workers");
+            if (workers <= 0) throw new ArgumentException("At least one worker required", nameof(workers));
             if (maxScheduledSizePerWorker <= 0) throw new ArgumentException("maxScheduledSizePerWorker <= 0");
             if (maxUnmeasuredTasksPerWorker <= 0) throw new ArgumentException("maxUnmeasuredTasksPerWorker <= 0");
 

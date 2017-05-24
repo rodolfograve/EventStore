@@ -192,7 +192,7 @@ namespace EventStore.ClientAPI.Transport.Tcp
         public void ReceiveAsync(Action<ITcpConnection, IEnumerable<ArraySegment<byte>>> callback)
         {
             if (callback == null)
-                throw new ArgumentNullException("callback");
+                throw new ArgumentNullException(nameof(callback));
 
             lock (_receivingLock)
             {

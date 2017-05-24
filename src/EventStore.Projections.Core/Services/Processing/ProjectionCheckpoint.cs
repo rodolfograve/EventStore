@@ -41,9 +41,9 @@ namespace EventStore.Projections.Core.Services.Processing
             int maxWriteBatchLength,
             ILogger logger = null)
         {
-            if (ioDispatcher == null) throw new ArgumentNullException("ioDispatcher");
-            if (readyHandler == null) throw new ArgumentNullException("readyHandler");
-            if (positionTagger == null) throw new ArgumentNullException("positionTagger");
+            if (ioDispatcher == null) throw new ArgumentNullException(nameof(ioDispatcher));
+            if (readyHandler == null) throw new ArgumentNullException(nameof(readyHandler));
+            if (positionTagger == null) throw new ArgumentNullException(nameof(positionTagger));
             if (from.CommitPosition < from.PreparePosition) throw new ArgumentException("from");
             //NOTE: fromCommit can be equal fromPrepare on 0 position.  Is it possible anytime later? Ignoring for now.
             _ioDispatcher = ioDispatcher;
@@ -127,7 +127,7 @@ namespace EventStore.Projections.Core.Services.Processing
         private void EmitEventsToStream(string streamId, EmittedEventEnvelope[] emittedEvents)
         {
             if (string.IsNullOrEmpty(streamId))
-                throw new ArgumentNullException("streamId");
+                throw new ArgumentNullException(nameof(streamId));
             EmittedStream stream;
             if (!_emittedStreams.TryGetValue(streamId, out stream))
             {

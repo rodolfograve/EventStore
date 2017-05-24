@@ -25,11 +25,11 @@ namespace EventStore.Core.Tests.Services.ElectionsService
             if (string.IsNullOrWhiteSpace(clusterDns))
                 throw new ArgumentException(string.Format("Wrong cluster DNS name: {0}", clusterDns), clusterDns);
             if (self == null)
-                throw new ArgumentNullException("self");
+                throw new ArgumentNullException(nameof(self));
             if (groupMembers == null)
-                throw new ArgumentNullException("groupMembers");
+                throw new ArgumentNullException(nameof(groupMembers));
             if (clusterManager == null)
-                throw new ArgumentNullException("clusterManager");
+                throw new ArgumentNullException(nameof(clusterManager));
 
             ClusterDns = clusterDns;
             Self = self;

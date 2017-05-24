@@ -37,7 +37,7 @@ namespace EventStore.Projections.Core.Services.Processing
                 publisher, projectionCorrelationId, projectionConfig, name, positionTagger, namingBuilder,
                 usePersistentCheckpoints)
         {
-            if (ioDispatcher == null) throw new ArgumentNullException("ioDispatcher");
+            if (ioDispatcher == null) throw new ArgumentNullException(nameof(ioDispatcher));
             _projectionVersion = projectionVersion;
             _runAs = runAs;
             _ioDispatcher = ioDispatcher;

@@ -148,10 +148,10 @@ namespace EventStore.Projections.Core.Services.Processing
 
         private void EnqueuePrerecordedEvent(EventRecord @event, CheckpointTag tag)
         {
-            if (@event == null) throw new ArgumentNullException("event");
-            if (tag == null) throw new ArgumentNullException("tag");
+            if (@event == null) throw new ArgumentNullException(nameof(@event));
+            if (tag == null) throw new ArgumentNullException(nameof(tag));
             if (@event.EventType != "$>")
-                throw new ArgumentException("linkto ($>) event expected", "event");
+                throw new ArgumentException("linkto ($>) event expected", nameof(@event));
 
             _loadingItemsCount++;
 

@@ -14,9 +14,9 @@ namespace EventStore.Transport.Tcp
         public SocketArgsPool(string name, int initialCount, Func<SocketAsyncEventArgs> socketArgsCreator)
         {
             if (socketArgsCreator == null)
-                throw new ArgumentNullException("socketArgsCreator");
+                throw new ArgumentNullException(nameof(socketArgsCreator));
             if (initialCount < 0)
-                throw new ArgumentOutOfRangeException("initialCount");
+                throw new ArgumentOutOfRangeException(nameof(initialCount));
 
             Name = name;
             _socketArgsCreator = socketArgsCreator;

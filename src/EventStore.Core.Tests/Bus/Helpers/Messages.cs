@@ -13,7 +13,7 @@ namespace EventStore.Core.Tests.Bus.Helpers
         public DeferredExecutionTestMessage(Action action)
         {
             if (action == null)
-                throw new ArgumentNullException("action");
+                throw new ArgumentNullException(nameof(action));
             _action = action;
         }
 
@@ -33,7 +33,7 @@ namespace EventStore.Core.Tests.Bus.Helpers
         public ExecutableTestMessage(Action action)
         {
             if (action == null)
-                throw new ArgumentNullException("action");
+                throw new ArgumentNullException(nameof(action));
             _action = action;
         }
 

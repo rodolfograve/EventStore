@@ -38,7 +38,7 @@ namespace EventStore.ClientAPI
         public Position(long commitPosition, long preparePosition)
         {
             if (commitPosition < preparePosition)
-                throw new ArgumentException("The commit position cannot be less than the prepare position", "commitPosition");
+                throw new ArgumentException("The commit position cannot be less than the prepare position", nameof(commitPosition));
 
             CommitPosition = commitPosition;
             PreparePosition = preparePosition;

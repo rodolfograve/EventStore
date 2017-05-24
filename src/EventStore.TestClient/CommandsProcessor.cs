@@ -101,7 +101,7 @@ namespace EventStore.TestClient
             const int maxLevel = 3;
 
             if (details == null)
-                throw new ArgumentNullException("details");
+                throw new ArgumentNullException(nameof(details));
 
             if (level > maxLevel)
                 return;

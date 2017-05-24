@@ -47,8 +47,8 @@ namespace EventStore.Projections.Core.Services.Processing
             bool stopOnEof = false, int? stopAfterNEvents = null)
             : base(publisher, eventReaderCorrelationId, readAs, stopOnEof)
         {
-            if (streams == null) throw new ArgumentNullException("streams");
-            if (timeProvider == null) throw new ArgumentNullException("timeProvider");
+            if (streams == null) throw new ArgumentNullException(nameof(streams));
+            if (timeProvider == null) throw new ArgumentNullException(nameof(timeProvider));
             if (streams.Length == 0) throw new ArgumentException("streams");
             _streams = new HashSet<string>(streams);
             _eofs = _streams.ToDictionary(v => v, v => false);
@@ -68,7 +68,7 @@ namespace EventStore.Projections.Core.Services.Processing
         private void ValidateTag(CheckpointTag fromPositions)
         {
             if (_streams.Count != fromPositions.Streams.Count)
-                throw new ArgumentException("Number of streams does not match", "fromPositions");
+                throw new ArgumentException("Number of streams does not match", nameof(fromPositions));
 
             foreach (var stream in _streams)
             {

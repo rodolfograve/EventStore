@@ -26,8 +26,8 @@ namespace EventStore.Projections.Core.Services.Processing
 
         public ProjectionCoreServiceCommandReader(IPublisher publisher, IODispatcher ioDispatcher, string workerId)
         {
-            if (publisher == null) throw new ArgumentNullException("publisher");
-            if (ioDispatcher == null) throw new ArgumentNullException("ioDispatcher");
+            if (publisher == null) throw new ArgumentNullException(nameof(publisher));
+            if (ioDispatcher == null) throw new ArgumentNullException(nameof(ioDispatcher));
 
             _coreServiceId = workerId;
             _publisher = publisher;

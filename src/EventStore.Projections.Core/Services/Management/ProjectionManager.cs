@@ -106,10 +106,10 @@ namespace EventStore.Projections.Core.Services.Management
             IODispatcher ioDispatcher,
             bool initializeSystemProjections = true)
         {
-            if (inputQueue == null) throw new ArgumentNullException("inputQueue");
-            if (publisher == null) throw new ArgumentNullException("publisher");
-            if (queueMap == null) throw new ArgumentNullException("queueMap");
-            if (queueMap.Count == 0) throw new ArgumentException("At least one queue is required", "queueMap");
+            if (inputQueue == null) throw new ArgumentNullException(nameof(inputQueue));
+            if (publisher == null) throw new ArgumentNullException(nameof(publisher));
+            if (queueMap == null) throw new ArgumentNullException(nameof(queueMap));
+            if (queueMap.Count == 0) throw new ArgumentException("At least one queue is required", nameof(queueMap));
 
             _inputQueue = inputQueue;
             _publisher = publisher;

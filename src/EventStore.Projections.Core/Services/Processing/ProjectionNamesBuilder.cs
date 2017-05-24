@@ -40,7 +40,7 @@ namespace EventStore.Projections.Core.Services.Processing
 
         public ProjectionNamesBuilder(string name, IQuerySources sources)
         {
-            if (sources == null) throw new ArgumentNullException("sources");
+            if (sources == null) throw new ArgumentNullException(nameof(sources));
             _name = name;
             _sources = sources;
             _resultStreamName = _sources.ResultStreamNameOption

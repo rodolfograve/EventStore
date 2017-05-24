@@ -87,7 +87,7 @@ namespace EventStore.BufferManagement
             {
                 CheckDisposed();
                 if (index < 0)
-                    throw new ArgumentException("_Index");
+                    throw new ArgumentException(nameof(index));
                 Position l = GetPositionFor(index);
                 EnsureCapacity(l);
                 ArraySegment<byte> buffer = _buffers[l.Index];
@@ -116,9 +116,9 @@ namespace EventStore.BufferManagement
         public BufferPool(int initialBufferCount, BufferManager bufferManager)
         {
             if (initialBufferCount <= 0)
-                throw new ArgumentException("initialBufferCount");
+                throw new ArgumentException(nameof(initialBufferCount));
             if (bufferManager == null)
-                throw new ArgumentNullException("bufferManager");
+                throw new ArgumentNullException(nameof(bufferManager));
             _length = 0;
             _buffers = new List<ArraySegment<byte>>(bufferManager.CheckOut(initialBufferCount));
             // must have 1 buffer
@@ -134,7 +134,7 @@ namespace EventStore.BufferManagement
         public void Append(byte [] data)
         {
             if (data == null) 
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
             Write(_length, data, 0, data.Length);
         }
 
@@ -159,11 +159,11 @@ namespace EventStore.BufferManagement
         public void Write(int position, byte[] data, int offset, int count)
         {
             if (data == null) 
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
             if (offset < 0 || offset > data.Length) 
-                throw new ArgumentOutOfRangeException("offset");
+                throw new ArgumentOutOfRangeException(nameof(offset));
             if (count < 0 || count + offset > data.Length) 
-                throw new ArgumentOutOfRangeException("count");
+                throw new ArgumentOutOfRangeException(nameof(count));
             Write(position, new ArraySegment<byte>(data, offset, count));
         }
 
@@ -205,11 +205,11 @@ namespace EventStore.BufferManagement
         public int ReadFrom(int position, byte[] data, int offset, int count)
         {
             if (data == null) 
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
             if (offset < 0 || offset > data.Length) 
-                throw new ArgumentOutOfRangeException("offset");
+                throw new ArgumentOutOfRangeException(nameof(offset));
             if (count < 0 || count + offset > data.Length) 
-                throw new ArgumentOutOfRangeException("count");
+                throw new ArgumentOutOfRangeException(nameof(count));
             return ReadFrom(position, new ArraySegment<byte>(data, offset, count));
         }
 
@@ -260,7 +260,7 @@ namespace EventStore.BufferManagement
         public void SetLength(int newLength, bool releaseMemory)
         {
             CheckDisposed();
-            if (newLength < 0) throw new ArgumentException("newLength must be greater than 0");
+            if (newLength < 0) throw new ArgumentException("must be greater than 0", nameof(newLength));
             int oldCapacity = Capacity;
             _length = newLength;
             

@@ -12,7 +12,7 @@ namespace EventStore.TestClient.Commands.RunTestScenarios
         public static EventData FromEvent(object accountObject)
         {
             if (accountObject == null)
-                throw new ArgumentNullException("accountObject");
+                throw new ArgumentNullException(nameof(accountObject));
 
             var type = accountObject.GetType().Name;
             var encodedData = Helper.UTF8NoBom.GetBytes(Codec.Json.To(accountObject));

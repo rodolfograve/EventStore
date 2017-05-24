@@ -37,7 +37,7 @@ namespace EventStore.Transport.Tcp.Formatting
 
         public BufferPool ToBufferPool(byte[] message)
         {
-            if (message == null) throw new ArgumentNullException("message");
+            if (message == null) throw new ArgumentNullException(nameof(message));
 
             var bufferPool = new BufferPool(_initialBuffers, _bufferManager);
             var stream = new BufferPoolStream(bufferPool);
@@ -47,13 +47,13 @@ namespace EventStore.Transport.Tcp.Formatting
 
         public ArraySegment<byte> ToArraySegment(byte[] message)
         {
-            if (message == null) throw new ArgumentNullException("message");
+            if (message == null) throw new ArgumentNullException(nameof(message));
             return new ArraySegment<byte>(message, 0, message.Length);
         }
 
         public byte[] ToArray(byte[] message)
         {
-            if (message == null) throw new ArgumentNullException("message");
+            if (message == null) throw new ArgumentNullException(nameof(message));
             return message;
         }
 

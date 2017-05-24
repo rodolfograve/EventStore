@@ -63,7 +63,7 @@ namespace EventStore.Transport.Http
             if (componentText == null)
             {
                 if (throwExceptions)
-                    throw new ArgumentNullException("componentText");
+                    throw new ArgumentNullException(nameof(componentText));
                 return false;
             }
             if (componentText == "")

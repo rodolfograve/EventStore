@@ -37,7 +37,7 @@ namespace EventStore.Core.Data
             size += eventType.Length * 2;
 
             if( size > TFConsts.MaxLogRecordSize - 10000)
-                throw new ArgumentException("Record is too big", "data");
+                throw new ArgumentException("Record is too big", nameof(data));
         }
     }
 }

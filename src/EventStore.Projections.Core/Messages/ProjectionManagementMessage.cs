@@ -445,9 +445,9 @@ namespace EventStore.Projections.Core.Messages
 
                 public GetState(IEnvelope envelope, string name, string partition)
                 {
-                    if (envelope == null) throw new ArgumentNullException("envelope");
-                    if (name == null) throw new ArgumentNullException("name");
-                    if (partition == null) throw new ArgumentNullException("partition");
+                    if (envelope == null) throw new ArgumentNullException(nameof(envelope));
+                    if (name == null) throw new ArgumentNullException(nameof(name));
+                    if (partition == null) throw new ArgumentNullException(nameof(partition));
                     _envelope = envelope;
                     _name = name;
                     _partition = partition;
@@ -480,9 +480,9 @@ namespace EventStore.Projections.Core.Messages
 
                 public GetResult(IEnvelope envelope, string name, string partition)
                 {
-                    if (envelope == null) throw new ArgumentNullException("envelope");
-                    if (name == null) throw new ArgumentNullException("name");
-                    if (partition == null) throw new ArgumentNullException("partition");
+                    if (envelope == null) throw new ArgumentNullException(nameof(envelope));
+                    if (name == null) throw new ArgumentNullException(nameof(name));
+                    if (partition == null) throw new ArgumentNullException(nameof(partition));
                     _envelope = envelope;
                     _name = name;
                     _partition = partition;

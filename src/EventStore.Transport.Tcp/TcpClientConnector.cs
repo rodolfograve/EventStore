@@ -53,8 +53,8 @@ namespace EventStore.Transport.Tcp
                                            Action<ITcpConnection, SocketError> onConnectionFailed = null,
                                            bool verbose = true)
         {
-            Ensure.NotNull(remoteEndPoint, "remoteEndPoint");
-            Ensure.NotNullOrEmpty(targetHost, "targetHost");
+            Ensure.NotNull(remoteEndPoint, nameof(remoteEndPoint));
+            Ensure.NotNullOrEmpty(targetHost, nameof(targetHost));
             return TcpConnectionSsl.CreateConnectingConnection(connectionId, remoteEndPoint, targetHost, validateServer,
                                                                this, connectionTimeout, onConnectionEstablished, onConnectionFailed, verbose);
         }
@@ -66,11 +66,11 @@ namespace EventStore.Transport.Tcp
                                   TimeSpan connectionTimeout)
         {
             if (serverEndPoint == null)
-                throw new ArgumentNullException("serverEndPoint");
+                throw new ArgumentNullException(nameof(serverEndPoint));
             if (onConnectionEstablished == null)
-                throw new ArgumentNullException("onConnectionEstablished");
+                throw new ArgumentNullException(nameof(onConnectionEstablished));
             if (onConnectionFailed == null)
-                throw new ArgumentNullException("onConnectionFailed");
+                throw new ArgumentNullException(nameof(onConnectionFailed));
 
             var socketArgs = _connectSocketArgsPool.Get();
             var connectingSocket = new Socket(serverEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);

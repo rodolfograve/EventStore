@@ -205,7 +205,7 @@ namespace EventStore.Core.Messages
             public ServiceShutdown(string serviceName)
             {
                 if (String.IsNullOrEmpty(serviceName)) 
-                    throw new ArgumentNullException("serviceName");
+                    throw new ArgumentNullException(nameof(serviceName));
                 ServiceName = serviceName;
             }
         }
