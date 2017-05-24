@@ -59,7 +59,7 @@ namespace EventStore.Core.Cluster
                                           int nodePriority)
         {
             if (state == VNodeState.Manager)
-                throw new ArgumentException(string.Format("Wrong State for VNode: {0}", state), "state");
+                throw new ArgumentException($"Wrong State for VNode: {state}", nameof(state));
             return new MemberInfo(instanceId, timeStamp, state, isAlive,
                                   internalTcpEndPoint, internalSecureTcpEndPoint,
                                   externalTcpEndPoint, externalSecureTcpEndPoint,
@@ -167,17 +167,8 @@ namespace EventStore.Core.Cluster
         public override string ToString()
         {
             if (State == VNodeState.Manager)
-                return string.Format("MAN {0:B} <{1}> [{2}, {3}, {4}] | {5:yyyy-MM-dd HH:mm:ss.fff}",
-                                     InstanceId, IsAlive ? "LIVE" : "DEAD", State,
-                                     InternalHttpEndPoint, ExternalHttpEndPoint, TimeStamp);
-            return string.Format("VND {0:B} <{1}> [{2}, {3}, {4}, {5}, {6}, {7}, {8}] {9}/{10}/{11}/E{12}@{13}:{14:B} | {15:yyyy-MM-dd HH:mm:ss.fff}",
-                                 InstanceId, IsAlive ? "LIVE" : "DEAD", State,
-                                 InternalTcpEndPoint, InternalSecureTcpEndPoint == null ? "n/a" : InternalSecureTcpEndPoint.ToString(),
-                                 ExternalTcpEndPoint, ExternalSecureTcpEndPoint == null ? "n/a" : ExternalSecureTcpEndPoint.ToString(),
-                                 InternalHttpEndPoint, ExternalHttpEndPoint,
-                                 LastCommitPosition, WriterCheckpoint, ChaserCheckpoint,
-                                 EpochNumber, EpochPosition, EpochId,
-                                 TimeStamp);
+                return $"MAN {InstanceId:B} <{(IsAlive ? "LIVE" : "DEAD")}> [{State}, {InternalHttpEndPoint}, {ExternalHttpEndPoint}] | {TimeStamp:yyyy-MM-dd HH:mm:ss.fff}";
+            return $"VND {InstanceId:B} <{(IsAlive ? "LIVE" : "DEAD")}> [{State}, {InternalTcpEndPoint}, {InternalSecureTcpEndPoint?.ToString() ?? "n/a"}, {ExternalTcpEndPoint}, {ExternalSecureTcpEndPoint?.ToString() ?? "n/a"}, {InternalHttpEndPoint}, {ExternalHttpEndPoint}] {LastCommitPosition}/{WriterCheckpoint}/{ChaserCheckpoint}/E{EpochNumber}@{EpochPosition}:{EpochId:B} | {TimeStamp:yyyy - MM-dd HH:mm:ss.fff}";
         }
 
         public bool Equals(MemberInfo other)

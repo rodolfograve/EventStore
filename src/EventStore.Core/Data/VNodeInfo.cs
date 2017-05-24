@@ -47,17 +47,8 @@ namespace EventStore.Core.Data
                        || (ExternalSecureTcp != null && ExternalSecureTcp.Equals(endPoint)));
         }
 
-        public override string ToString()
-        {
-            return string.Format("InstanceId: {0:B}, InternalTcp: {1}, InternalSecureTcp: {2}, " +
-                                 "ExternalTcp: {3}, ExternalSecureTcp: {4}, InternalHttp: {5}, ExternalHttp: {6}",
-                                 InstanceId,
-                                 InternalTcp,
-                                 InternalSecureTcp,
-                                 ExternalTcp,
-                                 ExternalSecureTcp,
-                                 InternalHttp,
-                                 ExternalHttp);
-        }
+        public override string ToString() =>
+            $"InstanceId: {InstanceId:B}, InternalTcp: {InternalTcp}, InternalSecureTcp: {InternalSecureTcp}, " +
+            $"ExternalTcp: {ExternalTcp}, ExternalSecureTcp: {ExternalSecureTcp}, InternalHttp: {InternalHttp}, ExternalHttp: {ExternalHttp}";
     }
 }

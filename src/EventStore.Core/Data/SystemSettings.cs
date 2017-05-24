@@ -22,10 +22,7 @@ namespace EventStore.Core.Data
             SystemStreamAcl = systemStreamAcl;
         }
 
-        public override string ToString()
-        {
-            return string.Format("UserStreamAcl: ({0}), SystemStreamAcl: ({1})", UserStreamAcl, SystemStreamAcl);
-        }
+        public override string ToString() => $"UserStreamAcl: ({UserStreamAcl}), SystemStreamAcl: ({SystemStreamAcl})";
 
         public static SystemSettings FromJsonBytes(byte[] json)
         {

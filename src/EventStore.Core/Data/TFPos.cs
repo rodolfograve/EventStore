@@ -18,10 +18,7 @@ namespace EventStore.Core.Data
         }
 
         [Pure]
-        public string AsString()
-        {
-            return string.Format("{0:X16}{1:X16}", CommitPosition, PreparePosition);
-        }
+        public string AsString() => $"{CommitPosition:X16}{PreparePosition:X16}";
 
         public static bool TryParse(string s, out TFPos pos)
         {
@@ -99,9 +96,6 @@ namespace EventStore.Core.Data
                    || (left.CommitPosition == right.CommitPosition && left.PreparePosition > right.PreparePosition);
         }
 
-        public override string ToString()
-        {
-            return string.Format("C:{0}/P:{1}", CommitPosition, PreparePosition);
-        }
+        public override string ToString() => $"C:{CommitPosition}/P:{PreparePosition}";
     }
 }

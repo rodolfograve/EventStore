@@ -11,9 +11,6 @@ namespace EventStore.Core.Data
             CommitPosition = commitPosition;
         }
 
-        public override string ToString()
-        {
-            return string.Format("CommitPosition: {0}, Event: {1}", CommitPosition, Event);
-        }
+        public override string ToString() => $"CommitPosition: {CommitPosition}, Event: {Event}";
     }
 }

@@ -79,8 +79,7 @@ namespace EventStore.Core.Helpers
                         {
                             Log.Error("FRAMING ERROR! Data:");
                             Log.Error(Helper.FormatBinaryDump(bytes));
-                            throw new PackageFramingException(string.Format("Package size is out of bounds: {0} (max: {1}).",
-                                                                            _packageLength, _maxPackageSize));
+                            throw new PackageFramingException($"Package size is out of bounds: {_packageLength} (max: {_maxPackageSize}).");
                         }
                         _packageLength += PrefixLength; // we need to read suffix as well
                     }
@@ -101,8 +100,7 @@ namespace EventStore.Core.Helpers
                                          | (buf[_packageLength - 1] << 24);
                         if (_packageLength - PrefixLength != suffixLength)
                         {
-                            throw new Exception(string.Format("Prefix length: {0} is not equal to suffix length: {1}.",
-                                                              _packageLength - PrefixLength, suffixLength));
+                            throw new Exception($"Prefix length: {_packageLength - PrefixLength} is not equal to suffix length: {suffixLength}.");
                         }
 #endif
                         _memStream.SetLength(_packageLength - PrefixLength); // remove suffix length

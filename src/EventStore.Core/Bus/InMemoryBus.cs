@@ -161,7 +161,7 @@ namespace EventStore.Core.Bus
 
             List<Type> descendants;
             if (!MessageHierarchy.Descendants.TryGetValue(typeof(T), out descendants))
-                throw new Exception(string.Format("No descendants for message of type '{0}'.", typeof(T).Name));
+                throw new Exception($"No descendants for message of type 'typeof(T).Name'.");
 
             foreach (var descendant in descendants)
             {
@@ -183,7 +183,7 @@ namespace EventStore.Core.Bus
 
             List<Type> descendants;
             if (!MessageHierarchy.Descendants.TryGetValue(typeof(T), out descendants))
-                throw new Exception(string.Format("No descendants for message of type '{0}'.", typeof(T).Name));
+                throw new Exception($"No descendants for message of type '{typeof(T).Name}'.");
 
             foreach (var descendant in descendants)
             {

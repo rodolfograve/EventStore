@@ -74,8 +74,7 @@ namespace EventStore.Transport.Tcp.Framing
                         {
                             Log.Error("FRAMING ERROR! Data:");
                             Log.Error(Common.Utils.Helper.FormatBinaryDump(bytes));
-                            throw new PackageFramingException(string.Format("Package size is out of bounds: {0} (max: {1}).",
-                                                                            _packageLength, _maxPackageSize));
+                            throw new PackageFramingException($"Package size is out of bounds: {_packageLength} (max: {_maxPackageSize}).");
                         }
 
                         _messageBuffer = new BufferPool(_bufferManager);

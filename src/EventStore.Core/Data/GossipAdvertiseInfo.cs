@@ -31,10 +31,7 @@ namespace EventStore.Core.Data
             AdvertiseInternalHttpPortAs = advertiseInternalHttpPortAs;
             AdvertiseExternalHttpPortAs = advertiseExternalHttpPortAs;
         }
-        public override string ToString()
-        {
-            return string.Format("IntTcp: {0}, IntSecureTcp: {1}\nExtTcp: {2}, ExtSecureTcp: {3}\nIntHttp: {4}, ExtHttp: {5}, IntAdvertiseAs: {6}:{7}, ExtAdvertiseAs: {8}:{9}", 
-                    InternalTcp, InternalSecureTcp, ExternalTcp, ExternalSecureTcp, InternalHttp, ExternalHttp, AdvertiseInternalIPAs, AdvertiseInternalHttpPortAs, AdvertiseExternalIPAs, AdvertiseExternalHttpPortAs);
-        }
+        public override string ToString() =>
+            $"IntTcp: {InternalTcp}, IntSecureTcp: {InternalSecureTcp}\nExtTcp: {ExternalTcp}, ExtSecureTcp: {ExternalSecureTcp}\nIntHttp: {InternalHttp}, ExtHttp: {ExternalHttp}, IntAdvertiseAs: {AdvertiseInternalIPAs}:{AdvertiseInternalHttpPortAs}, ExtAdvertiseAs: {AdvertiseExternalIPAs}:{AdvertiseExternalHttpPortAs}";
     }
 }

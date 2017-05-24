@@ -27,7 +27,7 @@ namespace EventStore.Core
 
         public bool Acquire()
         {
-            if (_acquired) throw new InvalidOperationException(string.Format("DB mutex '{0}' is already acquired.", MutexName));
+            if (_acquired) throw new InvalidOperationException($"DB mutex '{MutexName}' is already acquired.");
 
             try
             {
@@ -54,7 +54,7 @@ namespace EventStore.Core
 
         public void Release()
         {
-            if (!_acquired) throw new InvalidOperationException(string.Format("DB mutex '{0}' was not acquired.", MutexName));
+            if (!_acquired) throw new InvalidOperationException($"DB mutex '{MutexName}' was not acquired.");
             _dbMutex.ReleaseMutex();
         }
     }

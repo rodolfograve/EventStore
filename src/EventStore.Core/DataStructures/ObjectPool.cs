@@ -13,7 +13,7 @@ namespace EventStore.Core.DataStructures
         }
 
         public ObjectPoolDisposingException(string poolName, Exception innerException)
-            : base(string.Format("Object pool '{0}' is disposing/disposed while Get operation is requested.", poolName), innerException)
+            : base($"Object pool '{poolName}' is disposing/disposed while Get operation is requested.", innerException)
         {
             Ensure.NotNullOrEmpty(poolName, "poolName");
         }
@@ -27,7 +27,7 @@ namespace EventStore.Core.DataStructures
         }
 
         public ObjectPoolMaxLimitReachedException(string poolName, int maxLimit, Exception innerException)
-            : base(string.Format("Object pool '{0}' has reached its max limit for items: {1}.", poolName, maxLimit), innerException)
+            : base($"Object pool '{poolName}' has reached its max limit for items: {maxLimit}.", innerException)
         {
             Ensure.NotNullOrEmpty(poolName, "poolName");
             Ensure.Nonnegative(maxLimit, "maxLimit");

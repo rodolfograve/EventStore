@@ -85,7 +85,7 @@ namespace EventStore.Core.Index
 
             File.SetAttributes(_filename, FileAttributes.ReadOnly | FileAttributes.NotContentIndexed);
 
-            _workItems = new ObjectPool<WorkItem>(string.Format("PTable {0} work items", _id),
+            _workItems = new ObjectPool<WorkItem>($"PTable {_id} work items",
                                                   initialReaders,
                                                   maxReaders,
                                                   () => new WorkItem(filename, DefaultBufferSize),

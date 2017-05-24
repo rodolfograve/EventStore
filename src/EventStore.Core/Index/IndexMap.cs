@@ -133,8 +133,7 @@ namespace EventStore.Core.Index
                     var tables = loadPTables ? LoadPTables(reader, filename, checkpoints, cacheDepth) : new List<List<PTable>>();
 
                     if (!loadPTables && reader.ReadLine() != null)
-                        throw new CorruptIndexException(
-                            string.Format("Negative prepare/commit checkpoint in non-empty IndexMap: {0}.", checkpoints));
+                        throw new CorruptIndexException($"Negative prepare/commit checkpoint in non-empty IndexMap: {checkpoints}.");
 
                     return new IndexMap(version, tables, prepareCheckpoint, commitCheckpoint, maxTablesPerLevel);
                 }
@@ -148,7 +147,7 @@ namespace EventStore.Core.Index
             if ((text = reader.ReadLine()) == null)
                 throw new CorruptIndexException("IndexMap file is empty.");
             if (text.Length != 32 || !text.All(x => char.IsDigit(x) || (x >= 'A' && x <= 'F')))
-                throw new CorruptIndexException(string.Format("Corrupted IndexMap MD5 hash. Hash ({0}): {1}.", text.Length, text));
+                throw new CorruptIndexException($"Corrupted IndexMap MD5 hash. Hash ({text.Length}): {text}.");
 
             // check expected and real hashes are the same
             var expectedHash = new byte[16];
@@ -159,20 +158,16 @@ namespace EventStore.Core.Index
             if (expectedHash.Length != realHash.Length)
             {
                 throw new CorruptIndexException(
-                        string.Format("Hash validation error (different hash sizes).\n"
-                                      + "Expected hash ({0}): {1}, real hash ({2}): {3}.",
-                                      expectedHash.Length, BitConverter.ToString(expectedHash),
-                                      realHash.Length, BitConverter.ToString(realHash)));
+                        "Hash validation error (different hash sizes).\n"
+                        + $"Expected hash ({expectedHash.Length}): {BitConverter.ToString(expectedHash)}, real hash ({realHash.Length}): {BitConverter.ToString(realHash)}.");
             }
             for (int i = 0; i < realHash.Length; ++i)
             {
                 if (expectedHash[i] != realHash[i])
                 {
                     throw new CorruptIndexException(
-                            string.Format("Hash validation error (different hashes).\n"
-                                          + "Expected hash ({0}): {1}, real hash ({2}): {3}.",
-                                          expectedHash.Length, BitConverter.ToString(expectedHash),
-                                          realHash.Length, BitConverter.ToString(realHash)));
+                            "Hash validation error (different hashes).\n"
+                            + $"Expected hash ({expectedHash.Length}): {BitConverter.ToString(expectedHash)}, real hash ({realHash.Length}): {BitConverter.ToString(realHash)}.");
                 }
             }
         }
@@ -197,9 +192,9 @@ namespace EventStore.Core.Index
                 long commitCheckpoint;
                 var checkpoints = text.Split('/');
                 if (!long.TryParse(checkpoints[0], out prepareCheckpoint) || prepareCheckpoint < -1)
-                    throw new CorruptIndexException(string.Format("Invalid prepare checkpoint: {0}.", checkpoints[0]));
+                    throw new CorruptIndexException($"Invalid prepare checkpoint: {checkpoints[0]}.");
                 if (!long.TryParse(checkpoints[1], out commitCheckpoint) || commitCheckpoint < -1)
-                    throw new CorruptIndexException(string.Format("Invalid commit checkpoint: {0}.", checkpoints[1]));
+                    throw new CorruptIndexException($"Invalid commit checkpoint: {checkpoints[1]}.");
                 return new TFPos(commitCheckpoint, prepareCheckpoint);
             }
             catch (Exception exc)
@@ -217,8 +212,7 @@ namespace EventStore.Core.Index
             while ((text = reader.ReadLine()) != null)
             {
                 if (checkpoints.PreparePosition < 0 || checkpoints.CommitPosition < 0)
-                    throw new CorruptIndexException(
-                        string.Format("Negative prepare/commit checkpoint in non-empty IndexMap: {0}.", checkpoints));
+                    throw new CorruptIndexException($"Negative prepare/commit checkpoint in non-empty IndexMap: {checkpoints}.");
 
                 PTable ptable = null;
                 var pieces = text.Split(',');
@@ -258,7 +252,7 @@ namespace EventStore.Core.Index
 
         public void SaveToFile(string filename)
         {
-            var tmpIndexMap = string.Format("{0}.{1}.indexmap.tmp", filename, Guid.NewGuid());
+            var tmpIndexMap = $"{filename}.{Guid.NewGuid()}.indexmap.tmp";
 
             using (var memStream = new MemoryStream())
             using (var memWriter = new StreamWriter(memStream))

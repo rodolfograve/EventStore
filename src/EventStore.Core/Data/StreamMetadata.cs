@@ -27,16 +27,16 @@ namespace EventStore.Core.Data
         {
             if (maxCount <= 0)
                 throw new ArgumentOutOfRangeException(
-                    "maxCount", string.Format("{0} should be positive value.", SystemMetadata.MaxCount));
+                    nameof(maxCount), $"{SystemMetadata.MaxCount} should be positive value.");
             if (maxAge <= TimeSpan.Zero)
                 throw new ArgumentOutOfRangeException(
-                    "maxAge", string.Format("{0} should be positive time span.", SystemMetadata.MaxAge));
+                    nameof(maxAge), $"{SystemMetadata.MaxAge} should be positive time span.");
             if (truncateBefore < 0)
                 throw new ArgumentOutOfRangeException(
-                    "truncateBefore", string.Format("{0} should be non-negative value.", SystemMetadata.TruncateBefore));
+                    nameof(truncateBefore), $"{SystemMetadata.TruncateBefore} should be non-negative value.");
             if (cacheControl <= TimeSpan.Zero)
                 throw new ArgumentOutOfRangeException(
-                    "cacheControl", string.Format("{0} should be positive time span.", SystemMetadata.CacheControl));
+                    nameof(cacheControl), $"{SystemMetadata.CacheControl} should be positive time span.");
 
             MaxCount = maxCount;
             MaxAge = maxAge;
@@ -46,11 +46,8 @@ namespace EventStore.Core.Data
             Acl = acl;
         }
 
-        public override string ToString()
-        {
-            return string.Format("MaxCount: {0}, MaxAge: {1}, TruncateBefore: {2}, TempStream: {3}, CacheControl: {4}, Acl: {5}",
-                                 MaxCount, MaxAge, TruncateBefore, TempStream, CacheControl, Acl);
-        }
+        public override string ToString() =>
+            $"MaxCount: {MaxCount}, MaxAge: {MaxAge}, TruncateBefore: {TruncateBefore}, TempStream: {TempStream}, CacheControl: {CacheControl}, Acl: {Acl}";
 
         public static StreamMetadata FromJsonBytes(byte[] json)
         {

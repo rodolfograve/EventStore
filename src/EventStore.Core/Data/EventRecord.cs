@@ -142,31 +142,18 @@ namespace EventStore.Core.Data
             return !Equals(left, right);
         }
 
-        public override string ToString()
-        {
-            return string.Format("EventNumber: {0}, "
-                                 + "LogPosition: {1}, "
-                                 + "CorrelationId: {2}, "
-                                 + "EventId: {3}, "
-                                 + "TransactionPosition: {4}, "
-                                 + "TransactionOffset: {5}, "
-                                 + "EventStreamId: {6}, "
-                                 + "ExpectedVersion: {7}, "
-                                 + "TimeStamp: {8}, "
-                                 + "Flags: {9}, "
-                                 + "EventType: {10}",
-                                 EventNumber,
-                                 LogPosition,
-                                 CorrelationId,
-                                 EventId,
-                                 TransactionPosition,
-                                 TransactionOffset,
-                                 EventStreamId,
-                                 ExpectedVersion,
-                                 TimeStamp,
-                                 Flags,
-                                 EventType);
-        }
+        public override string ToString() =>
+            $"{nameof(EventNumber)}: {EventNumber}, "
+            + $"{nameof(LogPosition)}: {LogPosition}, "
+            + $"{nameof(CorrelationId)}: {CorrelationId}, "
+            + $"{nameof(EventId)}: {EventId}, "
+            + $"{nameof(TransactionPosition)}: {TransactionPosition}, "
+            + $"{nameof(TransactionOffset)}: {TransactionOffset}, "
+            + $"{nameof(EventStreamId)}: {EventStreamId}, "
+            + $"{nameof(ExpectedVersion)}: {ExpectedVersion}, "
+            + $"{nameof(TimeStamp)}: {TimeStamp}, "
+            + $"{nameof(Flags)}: {Flags}, "
+            + $"{nameof(EventType)}: {EventType}";
 
 #if DEBUG
         public string DebugDataView {

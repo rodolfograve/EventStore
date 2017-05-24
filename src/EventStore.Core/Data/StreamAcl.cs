@@ -26,14 +26,11 @@ namespace EventStore.Core.Data
             MetaWriteRoles = metaWriteRoles;
         }
 
-        public override string ToString()
-        {
-            return string.Format("Read: {0}, Write: {1}, Delete: {2}, MetaRead: {3}, MetaWrite: {4}",
-                                 ReadRoles == null ? "<null>" : "[" + string.Join(",", ReadRoles) + "]",
-                                 WriteRoles == null ? "<null>" : "[" + string.Join(",", WriteRoles) + "]",
-                                 DeleteRoles == null ? "<null>" : "[" + string.Join(",", DeleteRoles) + "]",
-                                 MetaReadRoles == null ? "<null>" : "[" + string.Join(",", MetaReadRoles) + "]",
-                                 MetaWriteRoles == null ? "<null>" : "[" + string.Join(",", MetaWriteRoles) + "]");
-        }
+        public override string ToString() =>
+            $"Read: {(ReadRoles == null ? "<null>" : "[" + string.Join(", ", ReadRoles) + "]")}, "
+            + $"Write: {(WriteRoles == null ? "<null>" : "[" + string.Join(",", WriteRoles) + "]")}, "
+            + $"Delete: {(DeleteRoles == null ? "<null>" : "[" + string.Join(",", DeleteRoles) + "]")}, "
+            + $"MetaRead: {(MetaReadRoles == null ? "<null>" : "[" + string.Join(",", MetaReadRoles) + "]")}, "
+            + $"MetaWrite: {(MetaWriteRoles == null ? "<null>" : "[" + string.Join(",", MetaWriteRoles) + "]")}";
     }
 }

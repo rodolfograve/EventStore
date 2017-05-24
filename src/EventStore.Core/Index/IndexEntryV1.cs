@@ -37,9 +37,6 @@ namespace EventStore.Core.Index
             return Key == other.Key && Position == other.Position;
         }
 
-        public override string ToString()
-        {
-            return string.Format("Key: {0}, Stream: {1}, Version: {2}, Position: {3}", Key, Stream, Version, Position);
-        }
+        public override string ToString() =>$"Key: {Key}, Stream: {Stream}, Version: {Version}, Position: {Position}";
     }
 }

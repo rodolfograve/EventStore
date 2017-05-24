@@ -375,9 +375,7 @@ namespace EventStore.ClientAPI.Internal
             else
             {
                 // TcpMessage.HeartbeatTimeout analog
-                var msg = string.Format("EventStoreConnection '{0}': closing TCP connection [{1}, {2}, {3}] due to HEARTBEAT TIMEOUT at pkgNum {4}.",
-                                        _esConnection.ConnectionName, _connection.RemoteEndPoint, _connection.LocalEndPoint,
-                                        _connection.ConnectionId, packageNumber);
+                var msg = $"EventStoreConnection '{_esConnection.ConnectionName}': closing TCP connection [{_connection.RemoteEndPoint}, {_connection.LocalEndPoint}, {_connection.ConnectionId}] due to HEARTBEAT TIMEOUT at pkgNum {packageNumber}.";
                 _settings.Log.Info(msg);
                 CloseTcpConnection(msg);
             }
@@ -388,7 +386,7 @@ namespace EventStore.ClientAPI.Internal
             switch (_state)
             {
                 case ConnectionState.Init:
-                    operation.Fail(new InvalidOperationException(string.Format("EventStoreConnection '{0}' is not active.", _esConnection.ConnectionName)));
+                    operation.Fail(new InvalidOperationException($"EventStoreConnection '{_esConnection.ConnectionName}' is not active."));
                     break;
                 case ConnectionState.Connecting:
                     LogDebug("StartOperation enqueue {0}, {1}, {2}, {3}.", operation.GetType().Name, operation, maxRetries, timeout);
@@ -436,7 +434,7 @@ namespace EventStore.ClientAPI.Internal
             switch (_state)
             {
                 case ConnectionState.Init:
-                    msg.Source.SetException(new InvalidOperationException(string.Format("EventStoreConnection '{0}' is not active.", _esConnection.ConnectionName)));
+                    msg.Source.SetException(new InvalidOperationException($"EventStoreConnection '{_esConnection.ConnectionName}' is not active."));
                     break;
                 case ConnectionState.Connecting:
                 case ConnectionState.Connected:
@@ -504,7 +502,7 @@ namespace EventStore.ClientAPI.Internal
             {
                 string message = Helper.EatException(() => Helper.UTF8NoBom.GetString(package.Data.Array, package.Data.Offset, package.Data.Count));
                 var exc = new EventStoreConnectionException(
-                        string.Format("Bad request received from server. Error: {0}", string.IsNullOrEmpty(message) ? "<no message>" : message));
+                        $"Bad request received from server. Error: {(string.IsNullOrEmpty(message) ? "<no message>" : message)}");
                 CloseConnection("Connection-wide BadRequest received. Too dangerous to continue.", exc);
                 return;
             }

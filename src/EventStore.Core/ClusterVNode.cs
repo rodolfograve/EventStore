@@ -103,13 +103,13 @@ namespace EventStore.Core
             }
             // MISC WORKERS
             _workerBuses = Enumerable.Range(0, vNodeSettings.WorkerThreads).Select(queueNum =>
-                new InMemoryBus(string.Format("Worker #{0} Bus", queueNum + 1),
+                new InMemoryBus($"Worker #{queueNum + 1} Bus",
                                 watchSlowMsg: true,
                                 slowMsgThreshold: TimeSpan.FromMilliseconds(200))).ToArray();
             _workersHandler = new MultiQueuedHandler(
                     vNodeSettings.WorkerThreads,
                     queueNum => new QueuedHandlerThreadPool(_workerBuses[queueNum],
-                                                            string.Format("Worker #{0}", queueNum + 1),
+                                                            $"Worker #{queueNum + 1}",
                                                             groupName: "Workers",
                                                             watchSlowMsg: true,
                                                             slowMsgThreshold: TimeSpan.FromMilliseconds(200)));
@@ -612,10 +612,6 @@ namespace EventStore.Core
             return tcs.Task;
         }
 
-        public override string ToString()
-        {
-            return string.Format("[{0:B}, {1}, {2}, {3}, {4}]", _nodeInfo.InstanceId,
-                                 _nodeInfo.InternalTcp, _nodeInfo.ExternalTcp, _nodeInfo.InternalHttp, _nodeInfo.ExternalHttp);
-        }
+        public override string ToString() => $"[{_nodeInfo.InstanceId:B}, {_nodeInfo.InternalTcp}, {_nodeInfo.ExternalTcp}, {_nodeInfo.InternalHttp}, {_nodeInfo.ExternalHttp}]";
     }
 }

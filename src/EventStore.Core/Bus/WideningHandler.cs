@@ -18,9 +18,6 @@ namespace EventStore.Core.Bus
             _handler.Handle(message);
         }
 
-        public override string ToString()
-        {
-            return string.Format("WideningHandler<{0}, {1}>({2})", typeof (TInput).Name, typeof (TOutput).Name, _handler);
-        }
+        public override string ToString() => $"WideningHandler<{typeof(TInput).Name}, {typeof(TOutput).Name}>({_handler})";
     }
 }
